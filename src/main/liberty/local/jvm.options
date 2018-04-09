@@ -1,0 +1,24 @@
+# defeito com.ibm.xml.xlxp2.api.stax.XMLEventFactoryImpl not found
+# 	An exception occurred while starting the application ipd_rest. 
+# 	The exception message was: com.ibm.ws.container.service.state.StateChangeException: javax.xml.stream.FactoryConfigurationError: 
+#	Provider javax.xml.stream.XMLEventFactory could not be instantiated: java.util.ServiceConfigurationError: javax.xml.stream.XMLEventFactory: 
+#	Provider com.ibm.xml.xlxp2.api.stax.XMLEventFactoryImpl not found
+#
+#Soluções:
+#	- http://stackoverflow.com/questions/42192813/jpa-2-1-integration-issue-with-liberty-profile-16-0-0-4
+# 	- atualizazar para versão do Liberty 17.0.0.2  
+#-Djavax.xml.stream.XMLEventFactory=com.sun.xml.internal.stream.events.XMLEventFactoryImpl
+
+# application properties
+-Duser.country=BR
+
+#mensagens em inglês na console (ajuda na hora de buscar ajuda na Internet)
+-Duser.language=en
+
+#encoding a console
+-Dconsole.encoding=UTF-8
+
+-Dfile.encoding=UTF-8
+
+-DLJBM.ambiente=desenvolvimentolocal
+

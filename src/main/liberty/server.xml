@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="wlpipdserver">
+
+    <!-- Enable features -->
+    <featureManager>
+		<feature>servlet-3.1</feature>
+		<feature>cdi-1.2</feature>
+		<feature>jaxrs-2.0</feature>
+		<feature>jaxws-2.2</feature>
+		<feature>ejbLite-3.2</feature>
+		<feature>beanValidation-1.1</feature>
+		<feature>jpa-2.1</feature>
+		<feature>jndi-1.0</feature>
+		<feature>appSecurity-2.0</feature>
+		<feature>localConnector-1.0</feature>
+		<feature>passwordUtilities-1.0</feature>
+		<feature>jca-1.7</feature>
+    </featureManager>
+    
+    <cdi12 enableImplicitBeanArchives="false" />
+
+    <httpEndpoint httpPort="${br.gov.bndes.ipd.http.port}" httpsPort="${br.gov.bndes.ipd.https.port}" id="defaultHttpEndpoint" host="*"/>
+    <!-- ipd_01:  <httpEndpoint id="defaultHttpEndpoint" httpPort="14119" httpsPort="14120" host="*"/> -->
+    <!-- ipd_02:  <httpEndpoint id="defaultHttpEndpoint" httpPort="14121" httpsPort="14122" host="*"/> -->
+                  
+    <applicationMonitor updateTrigger="mbean"/>
+
+    <keyStore id="defaultKeyStore" password="padaria123"/>
+
+    <basicRegistry id="basic" realm="BasicRealm">
+        <user name="admin" password="admin"/>
+    </basicRegistry>
+
+	<include optional="false" location="${shared.config.dir}/jdbc/sqljdbc4-4.2.xml"/>
+	<include optional="false" location="${shared.config.dir}/ldap/ldapRegistry.xml"/>
+
+	<dataSource id="ipddb" jdbcDriverRef="sqljdbc4-4.2" jndiName="jdbc/ipddb" containerAuthDataRef="auth-ipd" 
+		statementCacheSize="30" type="javax.sql.ConnectionPoolDataSource">
+		<connectionManager maxPoolSize="40" minPoolSize="5" purgePolicy="FailingConnectionOnly"/>
+		<properties.microsoft.sqlserver databaseName="${br.gov.bndes.ipd.ds.ipddb.dbname}"
+			instanceName="${br.gov.bndes.ipd.ds.ipddb.instance}" serverName="${br.gov.bndes.ipd.ds.ipddb.server}" />
+	</dataSource>
+
+	<dataSource id="iewdb" jdbcDriverRef="sqljdbc4-4.2" jndiName="jdbc/iewdb" containerAuthDataRef="auth-iew">
+		<properties.microsoft.sqlserver databaseName="${br.gov.bndes.ipd.ds.iewdb.dbname}"
+			instanceName="${br.gov.bndes.ipd.ds.iewdb.instance}" serverName="${br.gov.bndes.ipd.ds.iewdb.server}" /> 
+	</dataSource>
+	
+	<dataSource id="certdb" jdbcDriverRef="sqljdbc4-4.2" jndiName="jdbc/certdb" containerAuthDataRef="auth-cert" 
+		statementCacheSize="20" type="javax.sql.ConnectionPoolDataSource" transactional="false">
+		<connectionManager maxPoolSize="60" minPoolSize="10" purgePolicy="FailingConnectionOnly"/>
+		<properties.microsoft.sqlserver databaseName="${br.gov.bndes.ipd.ds.certdb.dbname}" 
+			instanceName="${br.gov.bndes.ipd.ds.certdb.instance}" serverName="${br.gov.bndes.ipd.ds.certdb.server}"/> 
+	</dataSource>
+	
+	<jndiEntry jndiName="ipd/urlServidorIpdWeb" value="${br.gov.bndes.ipd.urlServidorIpdWeb}"/>
+	<jndiEntry jndiName="ipd/urlServidorNotes" value="${br.gov.bndes.ipd.urlServidorNotes}"/>
+	<jndiEntry jndiName="ipd/endpointValidacaoUsuario" value="${br.gov.bndes.ipd.endpointValidacaoUsuario}"/>
+	
+    <webApplication contextRoot="ipd" id="ipd_rest" location="ipd.war" name="ipd_rest">
+    	<!--
+    			ImplementaÃ§Ã£o do StAX adicionada como biblioteca devido a erros no endpoint SOAP para consulta de impedimentos.
+    			Não mais necessária na versão 17.0.0.2 do Liberty 
+    	
+        <classloader apiTypeVisibility="spec,ibm-api,api">
+    		 
+            <commonLibrary id="StaxImpl" name="com.ibm.ws.xlxp" description="ImplementaÃ§Ã£o OSGI do StAX">
+                <fileset dir="${wlp.install.dir}/lib" includes="com.ibm.ws.xlxp.*.jar" id="com.ibm.ws.xlxp"></fileset>
+            </commonLibrary>
+        </classloader> 
+        -->
+    
+        <application-bnd>
+         	<security-role name="PRF_WS_IPD_VERIFICACAO_IMPEDIMENTOS">
+				<group name="PRF_WS_IPD_VERIFICACAO_IMPEDIMENTOS" />
+			</security-role>
+     	</application-bnd>
+    </webApplication>
+</server>

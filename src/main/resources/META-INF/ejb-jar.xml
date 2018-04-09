@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:ejb="http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+	version="3.1">
+	<display-name>ljbmEJB</display-name>
+
+	<ejb-client-jar>ljbmEJBClient.jar</ejb-client-jar>
+
+
+	<enterprise-beans>
+		<session>
+			<ejb-name>FPDominioImpl</ejb-name>
+<!--             <business-local>br.com.ljbm.fp.servico.FPDominioImpl</business-local> -->
+<!--              <business-remote>br.com.ljbm.fp.servico.FPDominioImpl</business-remote>  -->
+			<ejb-class>br.com.ljbm.fp.servico.FPDominioImpl</ejb-class>
+			<session-type>Stateless</session-type>
+			<resource-ref>
+				<res-ref-name>jdbc/ljbmDS</res-ref-name>
+				<res-type>javax.sql.DataSource</res-type>
+				<res-auth>Container</res-auth>
+				<res-sharing-scope>Shareable</res-sharing-scope>
+				<lookup-name>jdbc/ljbmDS</lookup-name>
+			</resource-ref>
+		</session>
+	</enterprise-beans>
+</ejb-jar>
