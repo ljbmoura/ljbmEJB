@@ -50,6 +50,9 @@ public class AvaliadorInvestimento implements AvaliadorInvestimentoRemote {
 	
 	private Selic selicWS;
 	
+	public AvaliadorInvestimento() {
+	}	
+	
 	/**
 	 * 
 	 */

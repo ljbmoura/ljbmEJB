@@ -6,8 +6,8 @@ package br.com.ljbm.fp.servico;
 import java.util.List;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,8 +17,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.logging.log4j.Logger;
+
 import br.com.ljbm.fp.modelo.Aplicacao;
+import br.com.ljbm.fp.modelo.Corretora;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
+
 /**
  * Financas pessoais acesso ao modelo, implementacao
  * 
@@ -27,12 +31,15 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
  * 
  */
 @Stateless
-//@Remote
+// @Remote
 @Local
 public class FPDominioImpl implements FPDominio {
 
 	@PersistenceContext
 	private EntityManager em;
+	
+	@Inject
+	Logger log;
 
 	/*
 	 * (non-Javadoc)
@@ -41,13 +48,11 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-	public void addFundoInvestimento(FundoInvestimento fundoInvestimento)
-			throws FPException {
+	public void addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		try {
 			em.persist(fundoInvestimento);
 		} catch (EntityExistsException ex) {
-			throw new FPException("FundoInvestimento, Duplicate Ide : "
-					+ fundoInvestimento.getId());
+			throw new FPException("FundoInvestimento, Duplicate Ide : " + fundoInvestimento.getIde());
 		}
 	}
 
@@ -58,13 +63,11 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-	public void deleteFundoInvestimento(FundoInvestimento fundoInvestimento)
-			throws FPException {
-		Long ide = fundoInvestimento.getId();
+	public void deleteFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
+		Long ide = fundoInvestimento.getIde();
 		fundoInvestimento = em.find(FundoInvestimento.class, ide);
 		if (fundoInvestimento == null) {
-			throw new FPException("FundoInvestimento, Record for " + ide
-					+ " not found");
+			throw new FPException("FundoInvestimento, Record for " + ide + " not found");
 		} else {
 			em.remove(fundoInvestimento);
 		}
@@ -78,13 +81,10 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-	public void updateFundoInvestimento(FundoInvestimento fundoInvestimento)
-			throws FPException {
-		FundoInvestimento c = em.find(FundoInvestimento.class,
-				fundoInvestimento.getId());
+	public void updateFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
+		FundoInvestimento c = em.find(FundoInvestimento.class, fundoInvestimento.getIde());
 		if (c == null) {
-			throw new FPException("FundoInvestimento, Record for "
-					+ fundoInvestimento.getId() + " not found");
+			throw new FPException("FundoInvestimento, Record for " + fundoInvestimento.getIde() + " not found");
 		} else {
 			em.merge(fundoInvestimento);
 		}
@@ -98,23 +98,19 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 
-		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class,
-				ide);
+		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);
 		if (fundoInvestimento == null) {
-			throw new FPException("FundoInvestimento, Record for " + ide
-					+ " not found");
+			throw new FPException("FundoInvestimento, Record for " + ide + " not found");
 		} else {
 			return fundoInvestimento;
 		}
 	}
 
 	@Override
-	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj)
-			throws FPException {
+	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj) throws FPException {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder(); // passo1
-		CriteriaQuery<FundoInvestimento> cqry = cb
-				.createQuery(FundoInvestimento.class);
+		CriteriaQuery<FundoInvestimento> cqry = cb.createQuery(FundoInvestimento.class);
 
 		Root<FundoInvestimento> root = cqry.from(FundoInvestimento.class); // passo2
 		cqry.select(root); // passo3
@@ -165,16 +161,13 @@ public class FPDominioImpl implements FPDominio {
 		// name. You can try out the type safe criteria API as well by swapping
 		// the criteria statements as described
 		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<FundoInvestimento> criteria = cb
-				.createQuery(FundoInvestimento.class);
-		Root<FundoInvestimento> fundoInvestimento = criteria
-				.from(FundoInvestimento.class);
+		CriteriaQuery<FundoInvestimento> criteria = cb.createQuery(FundoInvestimento.class);
+		Root<FundoInvestimento> fundoInvestimento = criteria.from(FundoInvestimento.class);
 		// TODO experimentar "type-safe criteria queries" conforme abaixo
 		// Swap criteria statements if you would like to try out type-safe
 		// criteria queries, a new feature in JPA 2.0
 		// criteria.select(fundoInvestimento).orderBy(cb.asc(fundoInvestimento.get(FundoInvestimento_.nome)));
-		criteria.select(fundoInvestimento).orderBy(
-				cb.asc(fundoInvestimento.get("nome")));
+		criteria.select(fundoInvestimento).orderBy(cb.asc(fundoInvestimento.get("nome")));
 		return em.createQuery(criteria).getResultList();
 
 	}
@@ -190,16 +183,14 @@ public class FPDominioImpl implements FPDominio {
 		try {
 			em.persist(aplicacao);
 		} catch (EntityExistsException exe) {
-			throw new FPException("Aplicacao, Duplicate Ide : "
-					+ aplicacao.getDocumento());
+			throw new FPException("Aplicacao, Duplicate Ide : " + aplicacao.getDocumento());
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.ljbm.fp.modelo.FPDominio#updateAplicacao(br.com.ljbm.fp.modelo
+	 * @see br.com.ljbm.fp.modelo.FPDominio#updateAplicacao(br.com.ljbm.fp.modelo
 	 * .Aplicacao)
 	 */
 	@Override
@@ -207,8 +198,7 @@ public class FPDominioImpl implements FPDominio {
 
 		Aplicacao s = em.find(Aplicacao.class, aplicacao.getDocumento());
 		if (s == null) {
-			throw new FPException("Aplicacao, Record for "
-					+ aplicacao.getDocumento() + " not found");
+			throw new FPException("Aplicacao, Record for " + aplicacao.getDocumento() + " not found");
 		} else {
 			em.merge(aplicacao);
 		}
@@ -217,8 +207,7 @@ public class FPDominioImpl implements FPDominio {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * br.com.ljbm.fp.modelo.FPDominio#deleteAplicacao(br.com.ljbm.fp.modelo
+	 * @see br.com.ljbm.fp.modelo.FPDominio#deleteAplicacao(br.com.ljbm.fp.modelo
 	 * .Aplicacao)
 	 */
 	@Override
@@ -226,8 +215,7 @@ public class FPDominioImpl implements FPDominio {
 		Long documento = aplicacao.getDocumento();
 		aplicacao = em.find(Aplicacao.class, documento);
 		if (aplicacao == null) {
-			throw new FPException("Aplicacao, Record for " + documento
-					+ " not found");
+			throw new FPException("Aplicacao, Record for " + documento + " not found");
 		} else {
 			em.remove(aplicacao);
 		}
@@ -242,8 +230,7 @@ public class FPDominioImpl implements FPDominio {
 	public Aplicacao getAplicacao(Long documento) throws FPException {
 		Aplicacao aplicacao = em.find(Aplicacao.class, documento);
 		if (aplicacao == null) {
-			throw new FPException("Aplicacao, Record for " + documento
-					+ " not found");
+			throw new FPException("Aplicacao, Record for " + documento + " not found");
 		} else {
 			return aplicacao;
 		}
@@ -265,6 +252,17 @@ public class FPDominioImpl implements FPDominio {
 		List<Aplicacao> lista = query.getResultList();
 		// return (Aplicacao[])lista.toArray(new Aplicacao[0]);
 		return lista;
+	}
+
+	@Override
+	public Corretora getCorretora(Long ide) throws FPException {
+		Corretora obj = em.find(Corretora.class, ide);
+		if (obj == null) {
+			log.info("Aplicacao, Record for ide " + ide + " not found");
+			throw new FPException("Aplicacao, Record for ide " + ide + " not found");
+		} else {
+			return obj;
+		}
 	}
 
 	// public FundoInvestimento[] getAllLancamentoCCbyTipoHistorico(Short ide)

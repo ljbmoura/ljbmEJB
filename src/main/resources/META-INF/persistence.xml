@@ -6,11 +6,12 @@
 	version="2.0">
 
 	<persistence-unit name="ljbmUP" transaction-type="JTA">
-		<!-- ATENÇÃO: para recriar as tabelas, comente o provides abaixo -->
+		<!-- ATENÇÃO: para recriar as tabelas, comente o provider abaixo -->
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<jta-data-source>java:comp/env/jdbc/ljbmDS</jta-data-source>
-
+		
+		<class>br.com.ljbm.fp.modelo.Corretora</class>
 		<class>br.com.ljbm.fp.modelo.FundoInvestimento</class>
 		<class>br.com.ljbm.fp.modelo.Aplicacao</class>
 
@@ -18,9 +19,9 @@
 
 		<properties>
 			<!-- allow table definitions/creation on-the-fly jpa-2.0 feature -->
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
+<!-- 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" /> -->
 			<!-- allow table definitions/creation on-the-fly jpa-2.1 feature -->
-			<property name="eclipselink.ddl-generation" value="create-tables" />
+<!-- 			<property name="eclipselink.ddl-generation" value="create-tables" /> -->
 
 			<!-- não funciona para criar automaticamente a estrutura -->
 			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
