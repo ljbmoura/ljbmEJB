@@ -23,17 +23,16 @@ import br.com.ljbm.fp.LeitorSerieHistorica;
 import br.com.ljbm.fp.SerieHistorica;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
-import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.utilitarios.FormatadorBR;
 import br.com.ljbm.utilitarios.Recurso;
 import br.com.ljbm.ws.bc.Selic;
 
 @Stateless
 //@Remote(AvaliadorInvestimentoRemote.class)
-public class AvaliadorInvestimento implements AvaliadorInvestimentoRemote {
+public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	private static final File resourcesDir = Recurso
-			.getPastaRecursos(AvaliadorInvestimento.class);
+			.getPastaRecursos(AvaliadorInvestimentoImpl.class);
 
 	private static final String EXTRATO_INVESTIMENTO_BB_ATUAL = resourcesDir
 			.getPath() + File.separator + "extratoInvestimentosAtual.txt";
@@ -50,14 +49,14 @@ public class AvaliadorInvestimento implements AvaliadorInvestimentoRemote {
 	
 	private Selic selicWS;
 	
-	public AvaliadorInvestimento() {
+	public AvaliadorInvestimentoImpl() {
 	}	
 	
 	/**
 	 * 
 	 */
 	@Inject
-	public AvaliadorInvestimento(Selic selicWS) {
+	public AvaliadorInvestimentoImpl(Selic selicWS) {
 		this.selicWS = selicWS;
 	}
 
@@ -93,35 +92,35 @@ public class AvaliadorInvestimento implements AvaliadorInvestimentoRemote {
 		return ret;
 	}
 
-	@Override
-	public void atualizaBaseInvestimentos_CotacaoSELIC(
-			String caminhaExtratoInvestimentosBB,
-			String caminhoSerieHistoricaSELIC_BC) {
-
-		List<ExtratoInvestimento> extratoInvestimentos = leExtratoInvestimentosBB(caminhaExtratoInvestimentosBB);
-
-		for (ExtratoInvestimento ei : extratoInvestimentos) {
-			try {
-				FundoInvestimento fi = ei.getFundoInvestimento();
-				System.out.println("Sincronizando " + fi.toString());
-				FundoInvestimento existente;
-				if (null != (existente = model.getFundoInvestimentoByCNPJ(fi
-						.getCNPJ()))) {
-					System.out.println("Sincronizado " + fi.toString());
-					existente.setNome(fi.getNome());
-					existente.setTaxaImpostoRenda(fi.getTaxaImpostoRenda());
-					model.updateFundoInvestimento(existente);
-
-				} else {
-					model.addFundoInvestimento(fi);
-				}
-
-			} catch (FPException e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
-		}
-
-	}
+//	@Override
+//	public void atualizaBaseInvestimentos_CotacaoSELIC(
+//			String caminhaExtratoInvestimentosBB,
+//			String caminhoSerieHistoricaSELIC_BC) {
+//
+//		List<ExtratoInvestimento> extratoInvestimentos = leExtratoInvestimentosBB(caminhaExtratoInvestimentosBB);
+//
+//		for (ExtratoInvestimento ei : extratoInvestimentos) {
+//			try {
+//				FundoInvestimento fi = ei.getFundoInvestimento();
+//				System.out.println("Sincronizando " + fi.toString());
+//				FundoInvestimento existente;
+//				if (null != (existente = model.getFundoInvestimentoByCNPJ(fi
+//						.getCNPJ()))) {
+//					System.out.println("Sincronizado " + fi.toString());
+//					existente.setNome(fi.getNome());
+//					existente.setTaxaImpostoRenda(fi.getTaxaImpostoRenda());
+//					model.updateFundoInvestimento(existente);
+//
+//				} else {
+//					model.addFundoInvestimento(fi);
+//				}
+//
+//			} catch (FPException e) {
+//				throw new IllegalArgumentException(e.getMessage());
+//			}
+//		}
+//
+//	}
 	private List<ComparacaoInvestimentoVersusSELIC> comparaInvestimentosFrenteSELICEm(
 			String dataPosicao, List<ExtratoInvestimento> extratoInvestimentos,
 			SerieHistorica<BigDecimal> serieCotacaoSELIC) {
@@ -337,7 +336,7 @@ public class AvaliadorInvestimento implements AvaliadorInvestimentoRemote {
 
 	private static void posicaoFinanceira() {
 
-		AvaliadorInvestimento avaliador = new AvaliadorInvestimento(new Selic());
+		AvaliadorInvestimentoImpl avaliador = new AvaliadorInvestimentoImpl(new Selic());
 
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = avaliador
 				.comparaInvestimentosComSELIC("06/04/2018");
