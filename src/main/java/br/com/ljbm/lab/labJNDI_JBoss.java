@@ -11,7 +11,7 @@ import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.rmi.PortableRemoteObject;
 
-import br.com.ljbm.fp.servico.AvaliadorInvestimentoRemote;
+import br.com.ljbm.fp.servico.AvaliadorInvestimento;
 
 
 public class labJNDI_JBoss {
@@ -72,8 +72,8 @@ public class labJNDI_JBoss {
 
 			//showTree(ctx, Integer.MAX_VALUE);
 			Object object = ctx.lookup("AvaliadorInvestimentoRemote");
-			AvaliadorInvestimentoRemote ai = (AvaliadorInvestimentoRemote) PortableRemoteObject
-					.narrow(object, AvaliadorInvestimentoRemote.class);
+			AvaliadorInvestimento ai = (AvaliadorInvestimento) PortableRemoteObject
+					.narrow(object, AvaliadorInvestimento.class);
 			System.out.println(ai.getMessage());
 
 		} catch (NamingException e) {
