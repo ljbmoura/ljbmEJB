@@ -7,8 +7,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.logging.log4j.Logger;
 
 //import com.fincatto.cotacao.classes.Cotacao;
 //import com.fincatto.cotacao.classes.Indice;
@@ -31,6 +34,9 @@ public class Selic {
 
 	private static final String WS_BC_FATORES_ACUMULADOS = "https://www3.bcb.gov.br/selic/rest/fatoresAcumulados/pub/search";
 	private static final DateTimeFormatter FORMATO_DATA_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	@Inject
+	private Logger log;
 	
 	public Selic() { }
 	
@@ -53,7 +59,7 @@ public class Selic {
 		}
 
 		String output = response.getEntity(String.class);
-//		System.out.println(output);
+		log.debug(output);
 		BigDecimal fator;
 						
 		Pattern pattern = Pattern.compile("fator:\\s([\\d|\\.]+)\\,");

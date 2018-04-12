@@ -258,8 +258,8 @@ public class FPDominioImpl implements FPDominio {
 	public Corretora getCorretora(Long ide) throws FPException {
 		Corretora obj = em.find(Corretora.class, ide);
 		if (obj == null) {
-			log.info("Aplicacao, Record for ide " + ide + " not found");
-			throw new FPException("Aplicacao, Record for ide " + ide + " not found");
+			log.info("Corretora, Record for ide " + ide + " not found");
+			throw new FPException("Corretora, Record for ide " + ide + " not found");
 		} else {
 			return obj;
 		}

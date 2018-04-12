@@ -16,6 +16,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.logging.log4j.Logger;
+
 import br.com.ljbm.fp.ExtratoInvestimento;
 import br.com.ljbm.fp.LeitorCestasCompraTesouroDireto;
 import br.com.ljbm.fp.LeitorExtratoInvestimentosBB;
@@ -46,6 +48,9 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			.getPath() + File.separator + "cestasComprasTD.txt";
 	
 	private static final MathContext MC_BR = new MathContext(17, RoundingMode.DOWN);
+	
+	@Inject
+	Logger log;
 	
 	private Selic selicWS;
 	
@@ -241,12 +246,12 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 							, FormatadorBR.paraLocalDate (dataPosicao));
 			
 			BigDecimal vRemunerado = a.getValorAplicado().multiply(coeficiente, MC_BR); 
-//			System.out.println(String.format("valor %s remunerado pela SELIC entre %s e %s (* %s): %s",
-//					a.getValorAplicado()
-//					, FormatadorBR.formataDataCurta(a.getData())
-//					, dataPosicao
-//					, coeficiente
-//					, FormatadorBR.formataDecimal(vRemunerado, 2)));
+			log.debug(String.format("valor %s remunerado pela SELIC entre %s e %s (* %s): %s",
+					a.getValorAplicado()
+					, FormatadorBR.formataDataCurta(a.getData())
+					, dataPosicao
+					, coeficiente
+					, FormatadorBR.formataDecimal(vRemunerado, 2)));
 					
 			BigDecimal valorAtual = a.getSaldoCotas().multiply(
 					e.getValorCotaData());
@@ -340,7 +345,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = avaliador
 				.comparaInvestimentosComSELIC("06/04/2018");
-		System.out.println(
+		System.out.print(
 				String.format("%30s %7s %7s %15s %15s %15s"
 					,"fundo"
 					,"%Rentab"

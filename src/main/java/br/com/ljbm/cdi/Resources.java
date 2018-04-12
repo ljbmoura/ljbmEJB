@@ -1,4 +1,4 @@
-package br.com.ljbm.fp.modelo;
+package br.com.ljbm.cdi;
 
 import java.time.Clock;
 
@@ -6,6 +6,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +28,9 @@ public class Resources {
     	return Clock.systemDefaultZone();
     };
     
-//    /**
-//	 * SQL SERVER, Banco de dados IPD    
-//	 */
-//    @PersistenceContext(unitName = "ipd")
-//    private EntityManager entityManager; 
+
+    @PersistenceContext(unitName = "ljbmUP")
+    private EntityManager entityManager; 
 //    
 //    @Produces @ApplicationScoped
 //    EntityManager entityManager() {
