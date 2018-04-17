@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <Configuration status="INFO" name="ljbm" >
 	<Properties>
 		<Property name="basedir">/opt/app/ljbm</Property>
@@ -7,7 +8,8 @@
 
 	<Appenders>
 		<Console name="STDOUT" target="SYSTEM_OUT">
-			<PatternLayout pattern="[ljbmEJB] %d{dd/MM/yyyy HH:mm:ss,SSS} %-5p %-25c{1} %m%n" charset="UTF-8"/>
+			<!--<PatternLayout pattern="%d{dd/MM/yyyy HH:mm:ss,SSS} %-5p %-25c{1} %m%n" charset="UTF-8"/>-->
+			<PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
 			<Filters>
 			<!-- 
 				<ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -20,7 +22,7 @@
 				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
 				<SizeBasedTriggeringPolicy size="100 MB" />
 			</Policies>
-			<PatternLayout pattern="%-5level %d{yyyy-MM-dd HH:mm:ss} (%.4thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
+			<PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
 			<DefaultRolloverStrategy min="1" max="30"/>
 		</RollingFile>
 		
@@ -35,7 +37,8 @@
 	<Loggers>
 		<Logger name="br.com.ljbm" level="info" />
 		
-		<Logger name="org.hibernate.SQL" level="info" />
+		<Logger name="org.hibernate.validator" level="info" />
+		<!--<Logger name="org.hibernate.SQL" level="debug" />-->
 		<Logger name="org.hibernate.type" level="info" />
 		<Logger name="org.hibernate.dialect" level="info" />
 

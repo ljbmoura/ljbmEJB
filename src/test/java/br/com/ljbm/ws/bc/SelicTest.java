@@ -1,23 +1,29 @@
 package br.com.ljbm.ws.bc;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
+import org.apache.logging.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
 public class SelicTest {
 
-	public static Selic selicWS;
-
-	@BeforeClass
-	public static void setup() {
-		selicWS = new Selic();		
-	}
+	@Mock
+	Logger log;
 	
+	@InjectMocks 
+	public Selic selicWS;
+
 	@Test
 	public void testFatorAcumuladoSelic() {
 
