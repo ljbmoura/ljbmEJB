@@ -42,7 +42,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 	private static final String SERIE_HISTORICA_DIARIA_SELIC = resourcesDir
 			.getPath() + File.separator + "TaxaSelic_Diaria_20060102_Atual.txt";
 
-	private static final String LINHA_FORMATACAO_VISAO_GERAL = "%s\t %s\t %s\t %s\t %s\t %s";
+//	private static final String LINHA_FORMATACAO_VISAO_GERAL = "%s\t %s\t %s\t %s\t %s\t %s";
 
 	private static final String CESTAS_COMPRAS_TD_ATUAL = resourcesDir
 			.getPath() + File.separator + "cestasComprasTD.txt";
