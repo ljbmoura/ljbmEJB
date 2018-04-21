@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ import br.com.ljbm.utilitarios.Recurso;
 import br.com.ljbm.ws.bc.Selic;
 
 @Stateless
-//@Remote(AvaliadorInvestimentoRemote.class)
+@Remote(AvaliadorInvestimento.class)
 public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	private static final File resourcesDir = Recurso

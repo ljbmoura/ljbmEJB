@@ -5,7 +5,7 @@ package br.com.ljbm.fp.servico;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
@@ -31,9 +31,12 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
  * 
  */
 @Stateless
-// @Remote
-@Local
+@Remote(FPDominio.class)
 public class FPDominioImpl implements FPDominio {
+
+//	
+//	public FPDominioSessionBean() {
+//	}
 
 	@PersistenceContext
 	private EntityManager em;
