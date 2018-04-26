@@ -35,7 +35,7 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="br.com.ljbm" level="info" />
+		<Logger name="br.com.ljbm" level="debug" />
 		
 		<Logger name="org.hibernate.validator" level="info" />
 		<!--<Logger name="org.hibernate.SQL" level="debug" />-->

@@ -32,11 +32,8 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
  */
 @Stateless
 @Remote(FPDominio.class)
+//@Interceptors(value={LogDesempenho.class})
 public class FPDominioImpl implements FPDominio {
-
-//	
-//	public FPDominioSessionBean() {
-//	}
 
 	@PersistenceContext
 	private EntityManager em;
@@ -149,13 +146,15 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAllFundoInvestimento()
 	 */
 	@Override
-	public List<FundoInvestimento> getAllFundoInvestimento() throws FPException {
+//	@SuppressWarnings("unchecked")
+	public List<FundoInvestimento> getAllFundoInvestimento() {
 
-		Query query = em.createNamedQuery("FundoInvestimento.Todos");
-		@SuppressWarnings("unchecked")
-		List<FundoInvestimento> lista = query.getResultList();
-		// return (FundoInvestimento[]) lista.toArray(new FundoInvestimento[0]);
-		return lista;
+//		return em.createNamedQuery("FundoInvestimento.Todos").getResultList();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<FundoInvestimento> criteria = cb.createQuery(FundoInvestimento.class);
+		Root<FundoInvestimento> fundoInvestimento = criteria.from(FundoInvestimento.class);
+		criteria.select(fundoInvestimento);
+		return em.createQuery(criteria).getResultList();
 	}
 
 	@Override

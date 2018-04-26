@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ejb-jar 
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"
-    version="3.2">
+<ejb-jar xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"
+	version="3.2">
 
 	<module-name>ljbmEJB</module-name>
 
@@ -11,16 +9,25 @@
 
 	<ejb-client-jar>ljbmEJBClient.jar</ejb-client-jar>
 
+	<interceptors>
+		<interceptor>
+			<interceptor-class>br.com.ljbm.fp.interceptador.LogDesempenho</interceptor-class>
+			<around-invoke>
+				<method-name>logaTempoExecucao</method-name>
+			</around-invoke>
+		</interceptor>
+	</interceptors>
+
 	<enterprise-beans>
 		<session>
 			<description>Acessar a base de dados de finanças pessoais</description>
 			<display-name>FPDominio Stateless Session</display-name>
 			<ejb-name>FPDominioImpl</ejb-name>
-<!-- 			não adicionar esta tag		 -->
-<!-- 			<remote>br.com.ljbm.fp.servico.FPDominioSessionBeanRemote</remote> -->
+			<!-- não adicionar esta tag -->
+			<!-- <remote>br.com.ljbm.fp.servico.FPDominioSessionBeanRemote</remote> -->
 			<ejb-class>br.com.ljbm.fp.servico.FPDominioImpl</ejb-class>
 			<session-type>Stateless</session-type>
-<!-- 			<transaction-type>Container</transaction-type> -->
+			<!-- <transaction-type>Container</transaction-type> -->
 			<resource-ref>
 				<res-ref-name>jdbc/ljbmDS</res-ref-name>
 				<res-type>javax.sql.DataSource</res-type>
@@ -30,4 +37,12 @@
 			</resource-ref>
 		</session>
 	</enterprise-beans>
+
+	<assembly-descriptor>
+		<interceptor-binding>
+			<ejb-name>FPDominioImpl</ejb-name>
+			<interceptor-class>br.com.ljbm.fp.interceptador.LogDesempenho</interceptor-class>
+		</interceptor-binding>
+	</assembly-descriptor>
+
 </ejb-jar>
