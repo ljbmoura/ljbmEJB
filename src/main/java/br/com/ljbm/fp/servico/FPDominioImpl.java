@@ -7,6 +7,10 @@ import java.util.List;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -33,6 +37,7 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
 @Stateless
 @Remote(FPDominio.class)
 //@Interceptors(value={LogDesempenho.class})
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class FPDominioImpl implements FPDominio {
 
 	@PersistenceContext
@@ -41,6 +46,15 @@ public class FPDominioImpl implements FPDominio {
 	@Inject
 	Logger log;
 
+	public FPDominioImpl() {
+	}
+
+	protected FPDominioImpl(EntityManager em, Logger log) {
+		super();
+		this.em = em;
+		this.log = log;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -48,8 +62,12 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public void addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		try {
+			Corretora c = em.find(Corretora.class, fundoInvestimento.getCorretora().getIde());
+			fundoInvestimento.setCorretora(c);
+			
 			em.persist(fundoInvestimento);
 		} catch (EntityExistsException ex) {
 			throw new FPException("FundoInvestimento, Duplicate Ide : " + fundoInvestimento.getIde());
