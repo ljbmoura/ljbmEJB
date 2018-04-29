@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
@@ -62,13 +60,14 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public void addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
+//	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		try {
 			Corretora c = em.find(Corretora.class, fundoInvestimento.getCorretora().getIde());
 			fundoInvestimento.setCorretora(c);
 			
 			em.persist(fundoInvestimento);
+			return fundoInvestimento;
 		} catch (EntityExistsException ex) {
 			throw new FPException("FundoInvestimento, Duplicate Ide : " + fundoInvestimento.getIde());
 		}

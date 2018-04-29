@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +25,7 @@ public class LeitorSerieHistorica {
 			+ "fornecido pelo BC: linha invalida";
 	public static final String ErroTituloNaoEncontrado = "Arquivo não está no formato da Consulta à Taxa Selic Diária "
 			+ "fornecido pelo BC: título não encontrado.";
-	private Logger log = Logger.getLogger(LeitorSerieHistorica.class.getCanonicalName());
+	private Logger log = LogManager.getFormatterLogger(LeitorSerieHistorica.class.getName());
 	
 	public SerieHistorica<BigDecimal> leCotacoesSELICBancoCentral(
 			String caminhoArquivoCotacaoSELICBC) {
@@ -90,7 +92,7 @@ public class LeitorSerieHistorica {
 						serie.addElemento(
 								FormatadorBR.paraCalendario(matcher.group(1)),
 								fatorAcumulado);
-						log.fine(String.format("fator diario %s, fator acumulado %s", fatorDiario.toString(), fatorAcumulado.toPlainString()));
+						log.debug(String.format("fator diario %s, fator acumulado %s", fatorDiario.toString(), fatorAcumulado.toPlainString()));
 						
 						fatorAcumuladoAnterior = fatorAcumulado;
 					} catch (ParseException e) {
