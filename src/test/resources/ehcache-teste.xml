@@ -9,25 +9,22 @@
 
 	<diskStore path="java.io.tmpdir" />
 
-<!-- 	<defaultCache maxEntriesLocalHeap="10000" eternal="false"
+	<defaultCache maxEntriesLocalHeap="10000" eternal="false"
 		timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
 		maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120"
 		memoryStoreEvictionPolicy="LRU" statistics="true">
 		<persistence strategy="localTempSwap" />
-	</defaultCache> -->
+ 	</defaultCache> 
 
 	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
 		maxEntriesLocalHeap="5000" eternal="false" timeToLiveSeconds="43200">
 		<persistence strategy="localTempSwap" />
 	</cache>
+	
 	<cache name="org.hibernate.cache.internal.StandardQueryCache"
 		maxEntriesLocalHeap="100" eternal="false" timeToLiveSeconds="43200">
 		<persistence strategy="localTempSwap" />
 	</cache>
-<!-- 	<cache name="query.Sistemas" maxEntriesLocalHeap="5" eternal="false" -->
-<!-- 		timeToLiveSeconds="86400"> -->
-<!-- 		<persistence strategy="localTempSwap" /> -->
-<!-- 	</cache> -->
 	
 	<!-- específicas por entidade -->
 	<cache name="br.com.ljbm.fp.modelo.Aplicacao"

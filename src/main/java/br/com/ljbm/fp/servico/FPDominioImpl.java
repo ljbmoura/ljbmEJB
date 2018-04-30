@@ -3,10 +3,13 @@
  */
 package br.com.ljbm.fp.servico;
 
+//import org.hibernate.cache.ehcache.*;.*;
 import java.util.List;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
@@ -53,6 +56,17 @@ public class FPDominioImpl implements FPDominio {
 		this.log = log;
 	}
 
+	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public Corretora addCorretora(Corretora corretora) throws FPException {
+		try {
+			em.persist(corretora);
+			return corretora;
+		} catch (EntityExistsException ex) {
+			throw new FPException("Corretora, Duplicate Ide : " + corretora.getIde());
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,12 +74,9 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-//	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		try {
-			Corretora c = em.find(Corretora.class, fundoInvestimento.getCorretora().getIde());
-			fundoInvestimento.setCorretora(c);
-			
 			em.persist(fundoInvestimento);
 			return fundoInvestimento;
 		} catch (EntityExistsException ex) {
@@ -80,6 +91,7 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void deleteFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		Long ide = fundoInvestimento.getIde();
 		fundoInvestimento = em.find(FundoInvestimento.class, ide);
@@ -88,7 +100,6 @@ public class FPDominioImpl implements FPDominio {
 		} else {
 			em.remove(fundoInvestimento);
 		}
-
 	}
 
 	/*
@@ -98,6 +109,7 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void updateFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		FundoInvestimento c = em.find(FundoInvestimento.class, fundoInvestimento.getIde());
 		if (c == null) {
@@ -113,6 +125,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
 	 */
 	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 
 		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);
@@ -124,6 +137,7 @@ public class FPDominioImpl implements FPDominio {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj) throws FPException {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder(); // passo1
@@ -164,6 +178,7 @@ public class FPDominioImpl implements FPDominio {
 	 */
 	@Override
 //	@SuppressWarnings("unchecked")
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<FundoInvestimento> getAllFundoInvestimento() {
 
 //		return em.createNamedQuery("FundoInvestimento.Todos").getResultList();
