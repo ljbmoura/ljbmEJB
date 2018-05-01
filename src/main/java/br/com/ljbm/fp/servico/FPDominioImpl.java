@@ -75,13 +75,14 @@ public class FPDominioImpl implements FPDominio {
 	 */
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
-		try {
+	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) {
+//		try {
 			em.persist(fundoInvestimento);
 			return fundoInvestimento;
-		} catch (EntityExistsException ex) {
-			throw new FPException("FundoInvestimento, Duplicate Ide : " + fundoInvestimento.getIde());
-		}
+//		} catch (PersistenceException pe) {
+//			log.error(pe.getMessage());
+//			throw new FPException(String.format("Erro ao inserir FundoInvestimento: %s ", pe.getMessage()));
+//		}
 	}
 
 	/*
@@ -125,7 +126,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
 	 */
 	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+//	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 
 		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);

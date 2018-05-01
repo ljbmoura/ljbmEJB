@@ -2,6 +2,7 @@ package br.com.ljbm.fp.servico;
 
 import static br.com.ljbm.fp.modelo.Corretora.cnpjBB;
 import static br.com.ljbm.fp.modelo.Corretora.cnpjAgora;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,22 +28,24 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+// TODO usar classes do ehcache para avaliar resultados esperados
 public class FPDominioImplTest {
 	private static Logger log;
 
 	private static EntityManagerFactory entityManagerFactory;
-	private static EntityManager em;
-	
+
 	private static Corretora bB;
 	private static Corretora agora;
-	private static List<Long> idesfundosInseridos;
+	private static List<Long> idesFundosInseridos;
 
+	private EntityManager em;
+	private FPDominioImpl servico;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		entityManagerFactory = Persistence.createEntityManagerFactory("ljbmUPTeste", null);
 		log = LogManager.getFormatterLogger(FPDominioImplTest.class);
-		idesfundosInseridos = new ArrayList<Long>();
+		idesFundosInseridos = new ArrayList<Long>();
 	}
 
 	@AfterClass
@@ -52,77 +55,86 @@ public class FPDominioImplTest {
 	@Before
 	public void setUp() throws Exception {
 		em = entityManagerFactory.createEntityManager();
+		servico = new FPDominioImpl(em, log);
 		em.getTransaction().begin();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		em.getTransaction().commit();
-		em.close();
+		if (em.getTransaction().isActive()) {
+			em.getTransaction().commit();
+		}
+		em.close(); // ponto em que as estatísticas do ehcache são relatadas
 	}
-	
+
 	@Test
-	public void test00LimpaBase() throws FPException {
+	public void test00_PreparaBase() throws FPException {
 		em.createQuery("delete from FundoInvestimento").executeUpdate();
 		em.createQuery("delete from Corretora").executeUpdate();
-		
-		FPDominioImpl servico = new FPDominioImpl(em, log);
 
 		bB = new Corretora();
 		bB.setCnpj("00000000000191");
 		bB.setRazaoSocial("Banco do Brasil");
 		bB.setSigla("BB");
 		servico.addCorretora(bB);
-		
+
 		agora = new Corretora();
 		agora.setCnpj(cnpjAgora);
 		agora.setRazaoSocial("AGORA CTVM S.A.");
 		agora.setSigla("Agora");
 		servico.addCorretora(agora);
 	}
-	
+
 	@Test
-	public void test01AddFundoInvestimento() throws FPException {
-		FPDominioImpl servico = new FPDominioImpl(em, log);
+	public void test01_InsereFundosInvestimento() throws FPException {
+		
+		Corretora bBTransient = new Corretora();
+		bBTransient.setIde(1l);
+		
+		Stream
 
-		Stream<FundoInvestimento> listaFundos = Stream.of(
-//				new FundoInvestimento(cnpjAgora, "Agora Prefixado 2019", new BigDecimal("0.15"),
-//						TipoFundoInvestimento.TesouroDireto, agora),
-//				new FundoInvestimento(cnpjAgora, "Agora Prefixado 2023", new BigDecimal("0.15"),
-//						TipoFundoInvestimento.TesouroDireto, agora),
-//				new FundoInvestimento(cnpjAgora, "Agora NTNB-2024", new BigDecimal("0.15"),
-//						TipoFundoInvestimento.TesouroDireto, agora),
-//				new FundoInvestimento(cnpjAgora, "Agora NTNB-2035", new BigDecimal("0.15"),
-//						TipoFundoInvestimento.TesouroDireto, agora),
-				new FundoInvestimento(cnpjBB, "BB NTNB-2024", new BigDecimal("0.15"),
-						TipoFundoInvestimento.TesouroDireto, bB),
-				new FundoInvestimento(cnpjBB, "Agora Prefixado 2023", new BigDecimal("0.15"),
-						TipoFundoInvestimento.TesouroDireto, agora));
+				.of(
+						// new FundoInvestimento(cnpjAgora, "Agora Prefixado 2019", new
+						// BigDecimal("0.15"),
+						// TipoFundoInvestimento.TesouroDireto, agora),
+						// new FundoInvestimento(cnpjAgora, "Agora Prefixado 2023", new
+						// BigDecimal("0.15"),
+						// TipoFundoInvestimento.TesouroDireto, agora),
+						// new FundoInvestimento(cnpjAgora, "Agora NTNB-2024", new BigDecimal("0.15"),
+						// TipoFundoInvestimento.TesouroDireto, agora),
+						// new FundoInvestimento(cnpjAgora, "Agora NTNB-2035", new BigDecimal("0.15"),
+						// TipoFundoInvestimento.TesouroDireto, agora),
+						new FundoInvestimento(cnpjBB, "BB NTNB-2024", new BigDecimal("0.15"),
+								TipoFundoInvestimento.TesouroDireto, bB),
+						new FundoInvestimento(cnpjBB, "Agora Prefixado 2023", new BigDecimal("0.15"),
+								TipoFundoInvestimento.TesouroDireto, agora))
 
-		listaFundos.forEach(fundo -> {
-			try {
-				idesfundosInseridos.add(servico.addFundoInvestimento(fundo).getIde());
-			} catch (FPException e) {
-				em.getTransaction().rollback();
-				throw new RuntimeException(e);
-			}
-		});
+				.forEach(fundo -> {
+					try {
+						FundoInvestimento fundoPersistido = servico.addFundoInvestimento(fundo);
+						em.flush();
+						idesFundosInseridos.add(fundoPersistido.getIde());
+					} catch (Exception e) {
+						e.printStackTrace();
+						em.getTransaction().rollback();
+						log.info(e.getMessage());
+						fail(e.getMessage());
+					}
+				});
 	}
 
 	@Test
-	public void test02LeBDSemCache() throws FPException {
-		log.info("test02LeCache1oNivel");
-		FPDominioImpl servico = new FPDominioImpl(em, log);
-		log.info(servico.getFundoInvestimento(idesfundosInseridos.get(0)));
-		log.info(servico.getCorretora(bB.getIde()));
+	public void test02_LeFundos1aVezBD_GerandoCache() throws FPException {
+		log.info("test02_LeFundos1aVezBD_GerandoCache");
+		log.debug(servico.getFundoInvestimento(idesFundosInseridos.get(0)));
+		log.debug(servico.getCorretora(bB.getIde()));
 	}
 
 	@Test
-	public void test03LeCache2oNivel() throws FPException {
-		log.info("test03LeCache2oNivel");
-		FPDominioImpl servico = new FPDominioImpl(em, log);
-		log.info(servico.getFundoInvestimento(idesfundosInseridos.get(0)));
-		log.info(servico.getCorretora(bB.getIde()));
+	public void test03_LeFundosNoCache2oNivel() throws FPException {
+		log.info("test03_LeFundosNoCache2oNivel");
+		log.debug(servico.getFundoInvestimento(idesFundosInseridos.get(0)));
+		log.debug(servico.getCorretora(bB.getIde()));
 	}
-	
+
 }
