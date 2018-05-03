@@ -17,6 +17,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -128,7 +129,10 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 //	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
-
+		
+//		TypedQuery<FundoInvestimento> query = em.createQuery("select fi from FundoInvestimento fi join fetch fi.corretora where fi.ide=:ide", FundoInvestimento.class);
+//		query.setParameter("ide", ide);
+//		FundoInvestimento fundoInvestimento = query.getSingleResult();
 		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);
 		if (fundoInvestimento == null) {
 			throw new FPException("FundoInvestimento, Record for " + ide + " not found");
@@ -298,6 +302,14 @@ public class FPDominioImpl implements FPDominio {
 		} else {
 			return obj;
 		}
+	}
+	
+	public List<FundoInvestimento> getFundosCorretora(Long ide) {
+
+		TypedQuery<FundoInvestimento> query = em.createQuery(
+				"select fi from FundoInvestimento fi where fi.corretora.ide=:ide", FundoInvestimento.class);
+		query.setParameter("ide", ide);
+		return query.getResultList();
 	}
 
 	// public FundoInvestimento[] getAllLancamentoCCbyTipoHistorico(Short ide)
