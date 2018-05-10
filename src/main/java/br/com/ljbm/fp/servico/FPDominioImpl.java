@@ -127,7 +127,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
 	 */
 	@Override
-//	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 		
 //		TypedQuery<FundoInvestimento> query = em.createQuery("select fi from FundoInvestimento fi join fetch fi.corretora where fi.ide=:ide", FundoInvestimento.class);
