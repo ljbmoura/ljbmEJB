@@ -7,7 +7,7 @@
 	<Appenders>
 		<Console name="STDOUT" target="SYSTEM_OUT">
 			<PatternLayout
-				pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{7}: %m%n%xEx"
+				pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{1}: %m%n%xEx"
 				charset="UTF-8" />
 		</Console>
 	</Appenders>

@@ -93,7 +93,7 @@ public class FPDominioImpl implements FPDominio {
 	 * .fp.modelo.FundoInvestimento)
 	 */
 	@Override
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void deleteFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		Long ide = fundoInvestimento.getIde();
 		fundoInvestimento = em.find(FundoInvestimento.class, ide);
