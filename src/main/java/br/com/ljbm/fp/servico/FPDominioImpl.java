@@ -304,12 +304,13 @@ public class FPDominioImpl implements FPDominio {
 		}
 	}
 	
-	public List<FundoInvestimento> getFundosCorretora(Long ide) {
+	@Override
+	public Corretora getFundosCorretora(Long ide) {
 
-		TypedQuery<FundoInvestimento> query = em.createQuery(
-				"select fi from FundoInvestimento fi where fi.corretora.ide=:ide", FundoInvestimento.class);
+		TypedQuery<Corretora> query = em.createQuery(
+				"select c from Corretora c join fetch c.fundosComprados where c.ide=:ide", Corretora.class);
 		query.setParameter("ide", ide);
-		return query.getResultList();
+		return query.getSingleResult();
 	}
 
 	// public FundoInvestimento[] getAllLancamentoCCbyTipoHistorico(Short ide)
