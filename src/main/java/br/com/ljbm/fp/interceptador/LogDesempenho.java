@@ -15,8 +15,10 @@ public class LogDesempenho {
 	public Object logaTempoExecucao(InvocationContext contexto) throws Exception {
 		long inicio = System.currentTimeMillis();
 		Object retorno = contexto.proceed();
-		log.debug(String.format("duração %s[%s]: %sms", contexto.getMethod().getName(),
-				contexto.getTarget().getClass().getSimpleName(), System.currentTimeMillis() - inicio));
+		log.debug(String.format("%s.%s: %sms"
+				, contexto.getMethod().getDeclaringClass().getSimpleName() // contexto.getTarget().getClass().getSimpleName()
+				, contexto.getMethod().getName()
+				, System.currentTimeMillis() - inicio));
 		return retorno;
 	}
 }

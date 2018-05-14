@@ -2,17 +2,17 @@ package br.com.ljbm.cdi;
 
 import java.time.Clock;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@ApplicationScoped
+@Singleton
 public class Resources {
 	
     @Produces 
@@ -31,10 +31,5 @@ public class Resources {
 
     @PersistenceContext(unitName = "ljbmUP")
     private EntityManager entityManager; 
-//    
-//    @Produces @ApplicationScoped
-//    EntityManager entityManager() {
-//    	return entityManager;
-//    }
-//    
+   
 }

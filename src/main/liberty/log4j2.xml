@@ -17,7 +17,7 @@
 			</Filters>
 		</Console>
 		
-		<RollingFile name="LogGeral" fileName="${basedir}/ljbm.log" filePattern="${basedir}/rep-%d{yyyy-MM-dd}-%i.log.zip">
+		<RollingFile name="desempenhoMetodo" fileName="${basedir}/desempenhoMetodo.log" filePattern="${basedir}/desempenhoMetodo-%d{yyyy-MM-dd}-%i.log.zip">
 		    <Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
 				<SizeBasedTriggeringPolicy size="100 MB" />
@@ -26,15 +26,32 @@
 			<DefaultRolloverStrategy min="1" max="30"/>
 		</RollingFile>
 		
-		<Async name="AsyncSTDOUT">
+		<RollingFile name="desempenhoHttp" fileName="${basedir}/desempenhoHttp.log" filePattern="${basedir}/desempenhoHttp-%d{yyyy-MM-dd}-%i.log.zip">
+		    <Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
+			<DefaultRolloverStrategy min="1" max="30"/>
+		</RollingFile>
+		
+<!--		<Async name="AsyncSTDOUT">
 			<AppenderRef ref="STDOUT"/> 
 		</Async>
 		<Async name="AsyncGeral">
 			<AppenderRef ref="LogGeral"/> 
-		</Async>
+		</Async>-->
 	</Appenders>
 
 	<Loggers>
+		
+		<Logger name="br.com.ljbm.fp.rest.MetricasFilter" level="debug" additivity="false">
+			<AppenderRef ref="desempenhoHttp" />
+		</Logger>
+		<Logger name="br.com.ljbm.fp.interceptador.LogDesempenho" level="debug" additivity="false">
+			<AppenderRef ref="desempenhoMetodo" />
+		</Logger>
+
 		<Logger name="br.com.ljbm" level="debug" />
 		
 		<Logger name="org.hibernate.validator" level="info" />
@@ -43,8 +60,8 @@
 		<Logger name="org.hibernate.dialect" level="info" />
 
 		<Root level="info">
-			<AppenderRef ref="AsyncSTDOUT" />
-			<AppenderRef ref="AsyncGeral" />
+			<AppenderRef ref="STDOUT" />
+			<!--<AppenderRef ref="AsyncGeral" />-->
 		</Root>
 	</Loggers>
 </Configuration>
