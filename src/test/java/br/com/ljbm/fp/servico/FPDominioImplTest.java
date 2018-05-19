@@ -74,13 +74,13 @@ public class FPDominioImplTest {
 
 		bB = new Corretora();
 		bB.setCnpj("00000000000191");
-		bB.setRazaoSocial("Banco do Brasil");
+		bB.setRazaoSocial("BB BANCO DE INVESTIMENTO S/A - 1102303");
 		bB.setSigla("BB");
 		servico.addCorretora(bB);
 
 		agora = new Corretora();
 		agora.setCnpj(cnpjAgora);
-		agora.setRazaoSocial("AGORA CTVM S.A.");
+		agora.setRazaoSocial("AGORA CTVM S/A - 131836");
 		agora.setSigla("Agora");
 		servico.addCorretora(agora);
 	}
