@@ -1,292 +1,193 @@
 package br.com.ljbm.fp;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.groovy.util.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
-import br.com.ljbm.fp.modelo.Corretora;
-import br.com.ljbm.fp.modelo.FundoInvestimento;
-import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
 import br.com.ljbm.utilitarios.FormatadorBR;
 
 public class LeitorExtratoTesouroDireto {
-
-	enum EstadoElemento {
-		INICIO, NOVA_APLICACAO, LINHAS_APLICACOES, VALOR_COTA_ATUAL, FIM
-	};
+	@Inject
+	Logger log = LogManager.getFormatterLogger(LeitorExtratoTesouroDireto.class);
 
 	private String caminhoArquivoExtrato;
-	EstadoElemento elementoAtual;
-	EstadoElemento elementoAnterior;
-	BufferedReader leitorArquivo;
-	Calendar dataExtrato;
-	List<Aplicacao> aplicacoes;
-	BigDecimal valorCotaDataExtrato;
-	String nomeFundo;
-	String cnpjFundo;
-
+	private List<PosicaoTituloPorAgente> extratoTD;
+	
 	public LeitorExtratoTesouroDireto(String caminhoArquivoExtrato) {
 		this.caminhoArquivoExtrato = caminhoArquivoExtrato;
 	}
-
-	public List<ExtratoInvestimento> analisador() {
-
-		List<ExtratoInvestimento> extratoInvestimentos = new ArrayList<ExtratoInvestimento>(0);
-
-		elementoAtual = EstadoElemento.INICIO;
-
-		try {
-			leitorArquivo = new BufferedReader(new FileReader(caminhoArquivoExtrato));
-			while (elementoAtual != EstadoElemento.FIM) {
-				// estadoAtual = analisaBloco(leitorArquivo);
-				if ((elementoAtual == EstadoElemento.INICIO || elementoAtual == EstadoElemento.NOVA_APLICACAO) && // ) {
-				// extratoInvestimentos.clear();
-				// if (
-						novaAplicacao()) {
-					elementoAtual = EstadoElemento.LINHAS_APLICACOES;
-					continue;
-					// }
-				}
-
-				if (elementoAtual == EstadoElemento.LINHAS_APLICACOES) {
-					this.aplicacoes = new ArrayList<Aplicacao>(0);
-					if (aplicacoes()) {
-
-						ExtratoInvestimento investimento = new ExtratoInvestimento(dataExtrato, valorCotaDataExtrato,
-								aplicacoes, new FundoInvestimento(cnpjFundo, nomeFundo, new BigDecimal("0.15"),
-										TipoFundoInvestimento.RendaFixa));
-						extratoInvestimentos.add(investimento);
-						// System.out.println(investimento.toString());
-						elementoAtual = EstadoElemento.NOVA_APLICACAO;
-
-						continue;
-					}
-				}
-				elementoAtual = EstadoElemento.FIM;
-			}
-			leitorArquivo.close();
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Arquivo com formato invalido.");
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("Arquivo nao encontrado.");
-		} catch (IOException e) {
-			throw new IllegalArgumentException("Erro na leitura do arquivo.");
-		}
-
-		return extratoInvestimentos;
-	}
-
-	private boolean aplicacoes() throws IOException, ParseException {
-
-		// if (true) {
-		// return true;
-		// }
+	
+	public void le() throws IOException {
+		
+		BufferedReader leitorArquivo = new BufferedReader(new FileReader(caminhoArquivoExtrato));
 		String linha;
 
-		Pattern pattern1 = Pattern.compile(
-				/*
-				 * 1847195 Liquidada 01/04/2012 NTNB_Principal_150535 1,60 656,58 1,05 5,25
-				 * 1.056,82
-				 */
-				"\\s*([\\d]+)"
-
-						+ "\\s+(.+)"
-
-						+ "\\s+(\\d{2}\\/\\d{2}\\/\\d{4})"
-
-						+ "\\s+(.+)"
-
-						+ "\\s+([\\d\\.\\,]+)\\s+([\\d\\.\\,]+)\\s+([\\d\\.\\,]+)\\s+([\\d\\.\\,]+)\\s+([\\d\\.\\,]+)");
-
-		Matcher matcher;
-		while ((linha = leitorArquivo.readLine()) != null) {
-			if (linha.trim().isEmpty()) {
-				continue;
-			}
-			matcher = pattern1.matcher(linha);
-			if (matcher.find()) {
-				// for (int i = 1; i <= matcher.groupCount(); i++) {
-				// System.out.println(i + ": " + matcher.group(i));
-				// }
-
-				Aplicacao aplicacao = new Aplicacao();
-
-				aplicacao.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(5)).setScale(2));
-
-				aplicacao.setValorAplicado(aplicacao.getQuantidadeCotas()
-						.multiply(FormatadorBR.paraBigDecimal(matcher.group(6)).setScale(2)));
-				aplicacao.setSaldoCotas(aplicacao.getQuantidadeCotas());
-				aplicacao.setData(FormatadorBR.paraCalendario(matcher.group(3)));
-				aplicacao.setDocumento(Long.parseLong(matcher.group(1)));
-				aplicacoes.add(aplicacao);
-				// System.out.println("Linha processada : " + linha);
-
-				// for (int i = 1; i <= matcher.groupCount(); i++) {
-				// System.out.println(i + ": " + matcher.group(i));
-				// }
-			} else {
-				break;
-			}
-		}
-		return true;
-	}
-
-	private boolean novaAplicacao() throws IOException, ParseException {
-		String linha;
-		boolean retorno = false;
-
-		Pattern pattern = Pattern.compile("(.+)\\s+(\\d{2}\\/\\d{2}\\/\\d{4})\\s+([\\d\\.\\,]+)");
-		Matcher matcher;
-
-		while ((linha = leitorArquivo.readLine()) != null) {
-			if (linha.trim().isEmpty()) {
-				continue;
-			}
-			matcher = pattern.matcher(linha);
-			if (matcher.find()) {
-				// for (int i = 1; i <= matcher.groupCount(); i++) {
-				// System.out.println(i + ": " + matcher.group(i));
-				// }
-				nomeFundo = matcher.group(1).trim();
-				cnpjFundo = "CNPJ 0";
-				valorCotaDataExtrato = FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2);
-				dataExtrato = FormatadorBR.paraCalendario(matcher.group(2));
-				retorno = true;
-				break;
-			}
-		}
-		return retorno;
-	}
-
-	public interface ParseLinhaExtratoTD {
+		this.extratoTD = new ArrayList<PosicaoTituloPorAgente>(0);
 		
-		void preencheAtributos(String linha, Aplicacao apl);
-		void setProximo (ParseLinhaExtratoTD proximo);
-		ParseLinhaExtratoTD getProximo();
-	}
-
-	public class ParseLinhaTitulo implements ParseLinhaExtratoTD {
+		ParserLinhaExtratoTD parserTitulo = new ParserLinhaTitulo();
+		ParserLinhaExtratoTD parserAgenteCustodia = new ParserLinhaAgenteCustodia();
+		ParserLinhaExtratoTD parserPosicaoEm = new ParserLinhaADescartar();
+		ParserLinhaExtratoTD parserVencimentoTitulo = new ParserLinhaADescartar();
+		ParserLinhaExtratoTD parserCompra = new ParserLinhaCompra();
 		
-		ParseLinhaExtratoTD proximoParse = null;
+		parserTitulo.setProximo(parserAgenteCustodia);
+		parserAgenteCustodia.setProximo(parserPosicaoEm);
+		parserPosicaoEm.setProximo(parserVencimentoTitulo);
+		parserVencimentoTitulo.setProximo(parserCompra);
+		parserCompra.setProximo(parserCompra); // o próprio
 		
-		/*
-		 * Título: Tesouro IPCA+ 2024
-		 */
-		Pattern padraoLinha = Pattern.compile(
-				"Título:\\s*(.+)");
-
-		@Override
-		public void preencheAtributos(String linha, Aplicacao apl) {
-			Matcher matcher = padraoLinha.matcher(linha);
-			if (matcher.find()) {			
-				FundoInvestimento fi = new FundoInvestimento();
-				fi.setNome(matcher.group(1));
-				apl.setFundoInvestimento(fi);
-			}
-		}
-
-		@Override
-		public void setProximo(ParseLinhaExtratoTD proximo) {
-			proximoParse = proximo;
-		}
-
-		@Override
-		public ParseLinhaExtratoTD getProximo() {
-			return proximoParse;
-		}
-	}
-
-	public class ParseLinhaAgenteCustodia implements ParseLinhaExtratoTD {
-		/*
-		 * Agente de custódia: BB BANCO DE INVESTIMENTO S/A
-		 */
-		Pattern padraoLinha = Pattern.compile(
-				"Agente de custódia:\\s*(.+)");
-
-		ParseLinhaExtratoTD proximoParse = null;
-
-		@Override
-		public void setProximo(ParseLinhaExtratoTD proximo) {
-			proximoParse = proximo;
-		}
-		
-		@Override
-		public void preencheAtributos(String linha, Aplicacao apl) {
-			Matcher matcher = padraoLinha.matcher(linha);
-			if (matcher.find()) {			
-				Corretora c = new Corretora();
-				c.setRazaoSocial(matcher.group(1));
-				apl.getFundoInvestimento().setCorretora(c);
-			}
-		}
-
-		@Override
-		public ParseLinhaExtratoTD getProximo() {
-			return proximoParse;
-		}
-	}
-
-	public class CriadorAplicacao {
-		private Aplicacao apl;
-
-		public CriadorAplicacao() {
-			this.apl = new Aplicacao();
-		}
-
-		public void analisaLinha(String linha, ParseLinhaExtratoTD analisador) {
-			
-			analisador.preencheAtributos(linha, apl);
-		}
-
-		public Aplicacao getAplicacaoPronta() {
-			return apl;
-		}
-	}
-
-	public void parse() throws IOException {
-		this.aplicacoes = new ArrayList<Aplicacao>(0);
-		leitorArquivo = new BufferedReader(new FileReader(caminhoArquivoExtrato));
-		String linha;
-		ParseLinhaExtratoTD plt = new ParseLinhaTitulo();
-		ParseLinhaAgenteCustodia plac = new ParseLinhaAgenteCustodia();
-		
-		plt.setProximo(plac);
-		plac.setProximo(null);
-		CriadorAplicacao l = new CriadorAplicacao();
-		ParseLinhaExtratoTD pl = plt;
+		PosicaoTituloPorAgenteBuilder builder = new PosicaoTituloPorAgenteBuilder();
+		ParserLinhaExtratoTD parserLinhaAtual = parserTitulo;
 		try {
 			while ((linha = leitorArquivo.readLine()) != null) {
-				l.analisaLinha(linha, pl);
 				if (StringUtils.isEmpty(linha.trim())) {
-					pl = plt;
-				} else {
-					pl = pl.getProximo();
+					this.extratoTD.add(builder.getPosicaoTituloPorAgente());
+					parserLinhaAtual = parserTitulo;
+					builder = new PosicaoTituloPorAgenteBuilder();
+					continue;
 				}
-				if (pl == null) {
+				builder.obtemValores(linha, parserLinhaAtual);
+				parserLinhaAtual = parserLinhaAtual.getProximo();
+				
+				if (parserLinhaAtual == null) {
 					break;
 				}
 			}
-			this.aplicacoes.add(l.getAplicacaoPronta());
+			this.extratoTD.add(builder.getPosicaoTituloPorAgente());
 		} finally {
 			if (leitorArquivo != null) {
 				leitorArquivo.close();
 			}
 		}
 	}
-
-	public List<Aplicacao> getAplicacoes() {
-		return aplicacoes;
+	
+	public List<PosicaoTituloPorAgente> extratoLido() {
+		return extratoTD;
 	}
+	
+	protected interface ParserLinhaExtratoTD {
+
+		void preencheAtributos(String linha, PosicaoTituloPorAgente apl);
+
+		void setProximo(ParserLinhaExtratoTD proximo);
+
+		ParserLinhaExtratoTD getProximo();
+	}
+
+	protected abstract class ParserLinhaExtratoTDComum {
+		ParserLinhaExtratoTD proximoParse = null;
+
+		public void setProximo(ParserLinhaExtratoTD proximo) {
+			proximoParse = proximo;
+		}
+
+		public ParserLinhaExtratoTD getProximo() {
+			return proximoParse;
+		}
+	}
+
+	protected class ParserLinhaTitulo extends ParserLinhaExtratoTDComum implements ParserLinhaExtratoTD {
+		/*
+		 * Título: Tesouro IPCA+ 2024
+		 */
+		Pattern padraoLinha = Pattern.compile("Título:\\s*(.+)");
+
+		@Override
+		public void preencheAtributos(String linha, PosicaoTituloPorAgente extrato) {
+			Matcher matcher = padraoLinha.matcher(linha);
+			if (matcher.find()) {
+				extrato.setTitulo(matcher.group(1));
+			} else {
+				throw new IllegalStateException("Título não encotrado no extrado");
+			}
+		}
+	}
+
+	protected class ParserLinhaAgenteCustodia extends ParserLinhaExtratoTDComum implements ParserLinhaExtratoTD {
+		/*
+		 * Agente de custódia: BB BANCO DE INVESTIMENTO S/A
+		 */
+		Pattern padraoLinha = Pattern.compile("Agente de custódia:\\s*(.+)");
+
+		@Override
+		public void preencheAtributos(String linha, PosicaoTituloPorAgente extrato) {
+			Matcher matcher = padraoLinha.matcher(linha);
+			if (matcher.find()) {
+				extrato.setAgenteCustodia(matcher.group(1));
+			} else {
+				throw new IllegalStateException("Agente de custódia não encotrado no extrado");
+			}
+		}
+	}
+
+	protected class ParserLinhaADescartar extends ParserLinhaExtratoTDComum implements ParserLinhaExtratoTD {
+
+		public void preencheAtributos(String linha, PosicaoTituloPorAgente apl) {
+			// nada faz, apenas ignora a linha
+		}
+	}
+
+	protected class ParserLinhaCompra extends ParserLinhaExtratoTDComum implements ParserLinhaExtratoTD {
+		/*
+		 * 9/04/2007 5,20 555,95 2.890,94 IPCA + 6,47% IPCA + 7,44% 310,95 11.880,44 4.043 15,00 1.348,42 0,00 204,25 335,34 9.992,43
+		 */
+		Pattern padraoLinha = Pattern.compile(
+				"\\s*(\\d{2}\\/\\d{2}\\/\\d{4})" // data da aplicação
+			  + "\\s+([\\d\\.\\,]+)"			 // quantidade de títulos
+			  + "\\s+[\\d\\.\\,]+"				 // preço do título na aplicação
+			  + "\\s+([\\d\\.\\,]+)"			 // valor investido
+			  + "\\s+\\.*"						 // demais campos
+		);
+
+		@Override
+		public void preencheAtributos(String linha, PosicaoTituloPorAgente extrato) {
+			Matcher matcher = padraoLinha.matcher(linha);
+			if (matcher.find()) {
+				Aplicacao apl = new Aplicacao();
+				try {
+					apl.setData(FormatadorBR.paraCalendario(matcher.group(1)));
+					apl.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2));
+					apl.setValorAplicado(FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2));
+					apl.setSaldoCotas(apl.getQuantidadeCotas());
+					log.debug("Aplicação(Compra) Lida: " + apl.toString());
+					extrato.getCompras().add(apl);
+				} catch (ParseException e) {
+					throw new RuntimeException(e.getMessage());
+				}
+			} else {
+				throw new IllegalStateException("Aplicação(Compra) mal formatada no extrado");
+			}
+		}
+	}
+
+	public class PosicaoTituloPorAgenteBuilder {
+		private PosicaoTituloPorAgente posicao;
+
+		public PosicaoTituloPorAgenteBuilder() {
+			this.posicao = new PosicaoTituloPorAgente();
+			this.posicao.setCompras(new ArrayList<Aplicacao>(0));
+		}
+
+		public void obtemValores(String linha, ParserLinhaExtratoTD parserLinha) {
+
+			parserLinha.preencheAtributos(linha, posicao);
+		}
+
+		public PosicaoTituloPorAgente getPosicaoTituloPorAgente() {
+			return posicao;
+		}
+	}
+
 }
