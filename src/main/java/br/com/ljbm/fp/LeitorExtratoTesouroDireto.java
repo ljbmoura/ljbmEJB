@@ -52,6 +52,7 @@ public class LeitorExtratoTesouroDireto {
 		ParserLinhaExtratoTD parserLinhaAtual = parserTitulo;
 		try {
 			while ((linha = leitorArquivo.readLine()) != null) {
+				log.debug("linha lida: " + linha);
 				if (StringUtils.isEmpty(linha.trim())) {
 					this.extratoTD.add(builder.getPosicaoTituloPorAgente());
 					parserLinhaAtual = parserTitulo;
@@ -181,7 +182,7 @@ public class LeitorExtratoTesouroDireto {
 				apl.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2));
 				apl.setValorAplicado(FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2));
 				apl.setSaldoCotas(apl.getQuantidadeCotas());
-				log.debug("Aplicação(Compra) Lida: " + apl.toString());
+				log.debug("Aplicação(Compra) construída: " + apl.toString());
 				extrato.getCompras().add(apl);
 			} catch (ParseException e) {
 				throw new RuntimeException(e.getMessage());

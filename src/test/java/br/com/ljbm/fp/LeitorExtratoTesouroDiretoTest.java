@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
@@ -43,6 +44,7 @@ public class LeitorExtratoTesouroDiretoTest {
 //	}
 
 	@Test
+	@Ignore
 	public void extratoComUmFundoEDuasCompras() throws IOException {
 		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator + "extratoComUmFundoEDuasCompras.txt";
 		log.info("testando extrato : " + caminhoArquivoExtrato);
@@ -70,5 +72,32 @@ public class LeitorExtratoTesouroDiretoTest {
 		assertThat(segundaCompra.getSaldoCotas(), equalTo(new BigDecimal("8.00")));
 		assertThat(segundaCompra.getValorAplicado(), equalTo(new BigDecimal("8456.56")));
 	}
+	
+	@Test
+	public void extratoTDAtualCompleto() throws IOException {
+		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator 
+				+ "cestasComprasTD.txt";
+		log.info("testando extrato : " + caminhoArquivoExtrato);
+		leitor = new LeitorExtratoTesouroDireto(caminhoArquivoExtrato);
 
+		leitor.le();
+
+		List<PosicaoTituloPorAgente> extrato = leitor.extratoLido();
+		assertThat(extrato.size(), equalTo(9));
+
+		PosicaoTituloPorAgente posicao = extrato.get(0);
+		assertThat(posicao.getTitulo(), equalTo("Tesouro IPCA+ 2019"));
+		assertThat(posicao.getAgenteCustodia(), equalTo("AGORA CTVM S/A"));
+		
+		List<Aplicacao> compras = posicao.getCompras();
+		assertThat(compras.size(), equalTo(59));
+		
+		posicao = extrato.get(1);
+		assertThat(posicao.getTitulo(), equalTo("Tesouro IPCA+ 2024"));
+		assertThat(posicao.getAgenteCustodia(), equalTo("AGORA CTVM S/A"));
+		
+		compras = posicao.getCompras();
+		assertThat(compras.size(), equalTo(7));
+		
+	}
 }
