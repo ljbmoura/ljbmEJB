@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
+import br.com.ljbm.utilitarios.Data;
 import br.com.ljbm.utilitarios.FormatadorBR;
 
 public class LeitorExtratoInvestimentosBB {
@@ -133,7 +135,7 @@ public class LeitorExtratoInvestimentosBB {
 				Aplicacao aplicacao = new Aplicacao();
 				// System.out.println(1 + ": " + matcher.group(1));
 				aplicacao
-						.setData(FormatadorBR.paraCalendario(matcher.group(1)));
+						.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
 				// System.out.println(2 + ": " + matcher.group(2));
 				aplicacao.setDocumento(Long.parseLong(matcher.group(2)));
 				// System.out.println(3 + ": " + matcher.group(3));

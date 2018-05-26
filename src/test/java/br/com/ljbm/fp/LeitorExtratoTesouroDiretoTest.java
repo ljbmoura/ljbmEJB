@@ -60,12 +60,12 @@ public class LeitorExtratoTesouroDiretoTest {
 		List<Aplicacao> compras = posicao.getCompras();
 		assertThat(compras.size(), equalTo(2));
 		Aplicacao primeiraCompra = compras.get(0);
-		assertThat(primeiraCompra.getData(), equalTo(new GregorianCalendar(2007, Calendar.APRIL, 9)));
+		assertThat(primeiraCompra.getDataCompra(), equalTo(new GregorianCalendar(2007, Calendar.APRIL, 9)));
 		assertThat(primeiraCompra.getQuantidadeCotas(), equalTo(new BigDecimal("5.20")));
 		assertThat(primeiraCompra.getSaldoCotas(), equalTo(new BigDecimal("5.20")));
 		assertThat(primeiraCompra.getValorAplicado(), equalTo(new BigDecimal("2890.94")));
 		Aplicacao segundaCompra = compras.get(1);
-		assertThat(segundaCompra.getData(), equalTo(new GregorianCalendar(2011, Calendar.NOVEMBER, 26)));
+		assertThat(segundaCompra.getDataCompra(), equalTo(new GregorianCalendar(2011, Calendar.NOVEMBER, 26)));
 		assertThat(segundaCompra.getQuantidadeCotas(), equalTo(new BigDecimal("8.00")));
 		assertThat(segundaCompra.getSaldoCotas(), equalTo(new BigDecimal("8.00")));
 		assertThat(segundaCompra.getValorAplicado(), equalTo(new BigDecimal("8456.56")));

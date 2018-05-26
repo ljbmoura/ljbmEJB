@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
+import br.com.ljbm.utilitarios.Data;
 import br.com.ljbm.utilitarios.FormatadorBR;
 
 public class LeitorExtratoTesouroDireto {
@@ -178,7 +180,7 @@ public class LeitorExtratoTesouroDireto {
 		void preencheExtrato(PosicaoTituloPorAgente extrato, Matcher matcher) {
 			Aplicacao apl = new Aplicacao();
 			try {
-				apl.setData(FormatadorBR.paraCalendario(matcher.group(1)));
+				apl.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
 				apl.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2));
 				apl.setValorAplicado(FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2));
 				apl.setSaldoCotas(apl.getQuantidadeCotas());

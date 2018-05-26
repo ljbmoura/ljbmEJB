@@ -8,7 +8,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -93,13 +92,8 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		
 		for (Aplicacao compra : posicao.getCompras()) {
 			
-			// TODO substituir Calendar por LocalDate
-			LocalDate dataCompra = LocalDate.of(
-					compra.getData().get(Calendar.YEAR)
-					,compra.getData().get(Calendar.MONTH)+1
-					,compra.getData().get(Calendar.DAY_OF_MONTH));
-			
-			BigDecimal fatorRemuneracaoAcumuladaSELIC = selicWS.fatorAcumuladoSelic(dataCompra, dataAlvo);
+					
+			BigDecimal fatorRemuneracaoAcumuladaSELIC = selicWS.fatorAcumuladoSelic(compra.getDataCompra(), dataAlvo);
 			
 			BigDecimal vEquivalenteSELIC = compra.getValorAplicado().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(
@@ -142,16 +136,13 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		for (Aplicacao a : e.getAplicacoes()) {
 			BigDecimal coeficiente = 
 					selicWS.fatorAcumuladoSelic (
-							LocalDate.of (
-								a.getData().get(Calendar.YEAR), 
-								a.getData().get(Calendar.MONTH) + 1, 
-								a.getData().get(Calendar.DAY_OF_MONTH))
+								a.getDataCompra()
 							, FormatadorBR.paraLocalDate (dataPosicao));
 			
 			BigDecimal vRemunerado = a.getValorAplicado().multiply(coeficiente, MC_BR); 
 			log.debug(String.format("valor %s remunerado pela SELIC entre %s e %s (* %s): %s",
 					a.getValorAplicado()
-					, FormatadorBR.formataDataCurta(a.getData())
+					, a.getDataCompra()
 					, dataPosicao
 					, coeficiente
 					, FormatadorBR.formataDecimal(vRemunerado, 2)));

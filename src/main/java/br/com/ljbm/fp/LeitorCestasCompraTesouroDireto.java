@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
+import br.com.ljbm.utilitarios.Data;
 import br.com.ljbm.utilitarios.FormatadorBR;
 
 public class LeitorCestasCompraTesouroDireto {
@@ -132,7 +134,7 @@ public class LeitorCestasCompraTesouroDireto {
 										.setScale(2)));
 				aplicacao.setSaldoCotas(aplicacao.getQuantidadeCotas());
 				aplicacao
-						.setData(FormatadorBR.paraCalendario(matcher.group(3)));
+						.setDataCompra(LocalDate.parse(matcher.group(3),Data.formatter));
 				aplicacao.setDocumento(Long.parseLong(matcher.group(1)));
 				aplicacoes.add(aplicacao);
 //				System.out.println("Linha processada : " + linha);
