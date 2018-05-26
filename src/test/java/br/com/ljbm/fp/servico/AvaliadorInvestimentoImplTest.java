@@ -1,6 +1,7 @@
 package br.com.ljbm.fp.servico;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import br.com.ljbm.fp.LeitorExtratoTesouroDireto;
+import br.com.ljbm.fp.PosicaoTituloPorAgente;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.utilitarios.Recurso;
 import br.com.ljbm.ws.bc.Selic;
@@ -48,6 +51,7 @@ public class AvaliadorInvestimentoImplTest {
 	@Before
 	public void setUp() throws Exception {
 		selicService = new Selic(log);
+		em = entityManagerFactory.createEntityManager();
 		servicoFPDominio = new FPDominioImpl(em, log);
 //		em.getTransaction().begin();
 	}
@@ -58,10 +62,14 @@ public class AvaliadorInvestimentoImplTest {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws IOException {
+		
+		LeitorExtratoTesouroDireto leitor = new LeitorExtratoTesouroDireto(resourcesDir.getPath() + File.separator + "cestasComprasTDTest.txt");
+		leitor.le();
+		
 		AvaliadorInvestimentoImpl 
 			avaliador = new AvaliadorInvestimentoImpl(
-				  resourcesDir.getPath() + File.separator + "cestasComprasTDTest.txt"
+					leitor
 				, selicService
 				, new CotacaoTituloDAO()
 				, log
