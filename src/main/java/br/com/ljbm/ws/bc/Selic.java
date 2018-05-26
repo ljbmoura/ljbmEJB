@@ -35,10 +35,15 @@ public class Selic {
 	private static final String WS_BC_FATORES_ACUMULADOS = "https://www3.bcb.gov.br/selic/rest/fatoresAcumulados/pub/search";
 	private static final DateTimeFormatter FORMATO_DATA_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	@Inject
+	//@Inject
 	private Logger log;
 	
 	public Selic() { }
+	
+	@Inject
+	public Selic(Logger log) {
+		this.log = log;
+	}
 	
 	public BigDecimal fatorAcumuladoSelic(final LocalDate inicio, final LocalDate termino) {
 

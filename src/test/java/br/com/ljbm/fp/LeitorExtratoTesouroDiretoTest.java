@@ -13,7 +13,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
@@ -44,7 +43,6 @@ public class LeitorExtratoTesouroDiretoTest {
 //	}
 
 	@Test
-	@Ignore
 	public void extratoComUmFundoEDuasCompras() throws IOException {
 		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator + "extratoComUmFundoEDuasCompras.txt";
 		log.info("testando extrato : " + caminhoArquivoExtrato);
@@ -74,30 +72,30 @@ public class LeitorExtratoTesouroDiretoTest {
 	}
 	
 	@Test
-	public void extratoTDAtualCompleto() throws IOException {
+	public void extratoTDComDoisFundos() throws IOException {
 		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator 
-				+ "cestasComprasTD.txt";
+				+ "extratoComDoisFundos.txt";
 		log.info("testando extrato : " + caminhoArquivoExtrato);
 		leitor = new LeitorExtratoTesouroDireto(caminhoArquivoExtrato);
 
 		leitor.le();
 
 		List<PosicaoTituloPorAgente> extrato = leitor.extratoLido();
-		assertThat(extrato.size(), equalTo(9));
+		assertThat(extrato.size(), equalTo(2));
 
 		PosicaoTituloPorAgente posicao = extrato.get(0);
-		assertThat(posicao.getTitulo(), equalTo("Tesouro IPCA+ 2019"));
-		assertThat(posicao.getAgenteCustodia(), equalTo("AGORA CTVM S/A"));
+		assertThat(posicao.getTitulo(), equalTo("Tesouro IPCA+ 2024"));
+		assertThat(posicao.getAgenteCustodia(), equalTo("BB BANCO DE INVESTIMENTO S/A"));
 		
 		List<Aplicacao> compras = posicao.getCompras();
-		assertThat(compras.size(), equalTo(59));
+		assertThat(compras.size(), equalTo(4));
 		
 		posicao = extrato.get(1);
-		assertThat(posicao.getTitulo(), equalTo("Tesouro IPCA+ 2024"));
+		assertThat(posicao.getTitulo(), equalTo("Tesouro Prefixado 2023"));
 		assertThat(posicao.getAgenteCustodia(), equalTo("AGORA CTVM S/A"));
 		
 		compras = posicao.getCompras();
-		assertThat(compras.size(), equalTo(7));
+		assertThat(compras.size(), equalTo(4));
 		
 	}
 }

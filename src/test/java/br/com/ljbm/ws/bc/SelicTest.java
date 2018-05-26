@@ -20,13 +20,14 @@ public class SelicTest {
 	Logger log;
 	
 	@InjectMocks 
-	public Selic selicWS;
+	Selic selicWS;
 
 	@Test
 	public void testFatorAcumuladoSelic() {
 
 		BigDecimal fator = selicWS.fatorAcumuladoSelic(LocalDate.of(2007, 4, 19), LocalDate.of(2018, 4, 6));
 		assertThat(fator, equalTo(new BigDecimal("3.07544276955311")));
+		
 	}
 
 }
