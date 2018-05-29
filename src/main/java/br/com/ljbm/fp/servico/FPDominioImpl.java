@@ -15,6 +15,7 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -51,7 +52,7 @@ public class FPDominioImpl implements FPDominio {
 	public FPDominioImpl() {
 	}
 
-	protected FPDominioImpl(EntityManager em, Logger log) {
+	public FPDominioImpl(EntityManager em, Logger log) {
 		super();
 		this.em = em;
 		this.log = log;
@@ -130,17 +131,35 @@ public class FPDominioImpl implements FPDominio {
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 		
-//		TypedQuery<FundoInvestimento> query = em.createQuery("select fi from FundoInvestimento fi join fetch fi.corretora where fi.ide=:ide", FundoInvestimento.class);
-//		query.setParameter("ide", ide);
-//		FundoInvestimento fundoInvestimento = query.getSingleResult();
 		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);
 		if (fundoInvestimento == null) {
-			throw new FPException("FundoInvestimento, Record for " + ide + " not found");
+			throw new FPException("FundoInvestimento, record for ide = " + ide + " not found");
 		} else {
 			return fundoInvestimento;
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
+	 */
+	@Override
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public FundoInvestimento getFundoInvestimento(String agente, String titulo) throws FPException, NoResultException {
+		
+		TypedQuery<FundoInvestimento> query = 
+				em.createQuery("select fi from FundoInvestimento fi join fetch fi.corretora c where fi.nome=:titulo and c.razaoSocial=:agente", FundoInvestimento.class);
+		query.setParameter("agente", agente);
+		query.setParameter("titulo", titulo);
+		FundoInvestimento fundoInvestimento = query.getSingleResult();
+		if (fundoInvestimento == null) {
+			throw new FPException("FundoInvestimento, Record not found");
+		} else {
+			return fundoInvestimento;
+		}
+	}
+	
 	@Override
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj) throws FPException {

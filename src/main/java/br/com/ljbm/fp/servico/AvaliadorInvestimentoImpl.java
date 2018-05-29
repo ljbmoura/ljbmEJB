@@ -17,11 +17,9 @@ import javax.inject.Inject;
 
 import org.apache.logging.log4j.Logger;
 
-import br.com.ljbm.fp.ExtratoInvestimento;
-import br.com.ljbm.fp.LeitorExtratoTesouroDireto;
-import br.com.ljbm.fp.PosicaoTituloPorAgente;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
+import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.utilitarios.FormatadorBR;
 import br.com.ljbm.ws.bc.Selic;
 
@@ -35,21 +33,23 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	private static final MathContext MC_BR = new MathContext(17, RoundingMode.DOWN);
 	
+	@Inject	
 	private Logger log;
 	
 	private CotacaoTituloDAO daoCotacoes;
 	
+	@Inject
 	private Selic selicWS;
 	
-	private LeitorExtratoTesouroDireto leitor;
-
 	@EJB
 	FPDominio model;
 
-	@Inject
-	public AvaliadorInvestimentoImpl(LeitorExtratoTesouroDireto leitor, Selic selicWS, CotacaoTituloDAO daoCotacoes,
+	public AvaliadorInvestimentoImpl() {
+	}
+	
+	public AvaliadorInvestimentoImpl(
+			Selic selicWS, CotacaoTituloDAO daoCotacoes,
 			Logger log, FPDominio model) {
-		this.leitor = leitor;
 		this.selicWS = selicWS;
 		this.daoCotacoes = daoCotacoes;
 		this.log = log;
@@ -57,10 +57,11 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 	}
 
 	@Override
-	public List<ComparacaoInvestimentoVersusSELIC> comparaInvestimentosComSELIC(String dataPosicao) {
+	public List<ComparacaoInvestimentoVersusSELIC> comparaInvestimentosComSELIC(
+			List<PosicaoTituloPorAgente> extrato, String dataPosicao) {
 
 		ArrayList<ComparacaoInvestimentoVersusSELIC> ret = new ArrayList<ComparacaoInvestimentoVersusSELIC>(0);
-		for (PosicaoTituloPorAgente posicao : leitor.extratoLido()) {
+		for (PosicaoTituloPorAgente posicao : extrato) {
 			ret.add(comparativoExtratoInvestimento_X_SELIC(dataPosicao, posicao));
 		}
 		return ret;
@@ -124,56 +125,56 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 	}
 
 
-	private ComparacaoInvestimentoVersusSELIC comparativoExtratoInvestimento_X_SELIC(
-			String dataPosicao,
-			ExtratoInvestimento e) {
-		
-		BigDecimal totalValorAplicado = BigDecimal.ZERO;
-		BigDecimal totalValorAtual = BigDecimal.ZERO;
-		BigDecimal totalValorEquivSELIC = BigDecimal.ZERO;
-		BigDecimal totalDiferencaSELIC = BigDecimal.ZERO;
-		
-		for (Aplicacao a : e.getAplicacoes()) {
-			BigDecimal coeficiente = 
-					selicWS.fatorAcumuladoSelic (
-								a.getDataCompra()
-							, FormatadorBR.paraLocalDate (dataPosicao));
-			
-			BigDecimal vRemunerado = a.getValorAplicado().multiply(coeficiente, MC_BR); 
-			log.debug(String.format("valor %s remunerado pela SELIC entre %s e %s (* %s): %s",
-					a.getValorAplicado()
-					, a.getDataCompra()
-					, dataPosicao
-					, coeficiente
-					, FormatadorBR.formataDecimal(vRemunerado, 2)));
-					
-			BigDecimal valorAtual = a.getSaldoCotas().multiply(
-					e.getValorCotaData());
-
-			BigDecimal valorAplicadoRemanescente = a
-					.getValorAplicadoRemanescente();
-
-			totalValorAplicado = totalValorAplicado
-					.add(valorAplicadoRemanescente);
-			totalValorAtual = totalValorAtual.add(valorAtual);
-			totalValorEquivSELIC = totalValorEquivSELIC.add(vRemunerado);
-			totalDiferencaSELIC = totalDiferencaSELIC.add(valorAtual
-					.subtract(vRemunerado));
-
-		}
-		BigDecimal rentabilidadeFundo = totalValorAtual
-				.subtract(totalValorAplicado)
-				.divide(totalValorAplicado, 2, RoundingMode.DOWN)
-				.multiply(new BigDecimal("100.00"));
-		BigDecimal rentabilidadeEquivSELIC = totalValorEquivSELIC
-				.subtract(totalValorAplicado)
-				.divide(totalValorAplicado, 2, RoundingMode.DOWN)
-				.multiply(new BigDecimal("100.00"));
-
-		return new ComparacaoInvestimentoVersusSELIC(e.getFundoInvestimento().getNome(),
-				rentabilidadeFundo, rentabilidadeEquivSELIC,
-				totalDiferencaSELIC, totalValorAtual, totalValorEquivSELIC);
-	}
+//	private ComparacaoInvestimentoVersusSELIC comparativoExtratoInvestimento_X_SELIC(
+//			String dataPosicao,
+//			ExtratoInvestimento e) {
+//		
+//		BigDecimal totalValorAplicado = BigDecimal.ZERO;
+//		BigDecimal totalValorAtual = BigDecimal.ZERO;
+//		BigDecimal totalValorEquivSELIC = BigDecimal.ZERO;
+//		BigDecimal totalDiferencaSELIC = BigDecimal.ZERO;
+//		
+//		for (Aplicacao a : e.getAplicacoes()) {
+//			BigDecimal coeficiente = 
+//					selicWS.fatorAcumuladoSelic (
+//								a.getDataCompra()
+//							, FormatadorBR.paraLocalDate (dataPosicao));
+//			
+//			BigDecimal vRemunerado = a.getValorAplicado().multiply(coeficiente, MC_BR); 
+//			log.debug(String.format("valor %s remunerado pela SELIC entre %s e %s (* %s): %s",
+//					a.getValorAplicado()
+//					, a.getDataCompra()
+//					, dataPosicao
+//					, coeficiente
+//					, FormatadorBR.formataDecimal(vRemunerado, 2)));
+//					
+//			BigDecimal valorAtual = a.getSaldoCotas().multiply(
+//					e.getValorCotaData());
+//
+//			BigDecimal valorAplicadoRemanescente = a
+//					.getValorAplicadoRemanescente();
+//
+//			totalValorAplicado = totalValorAplicado
+//					.add(valorAplicadoRemanescente);
+//			totalValorAtual = totalValorAtual.add(valorAtual);
+//			totalValorEquivSELIC = totalValorEquivSELIC.add(vRemunerado);
+//			totalDiferencaSELIC = totalDiferencaSELIC.add(valorAtual
+//					.subtract(vRemunerado));
+//
+//		}
+//		BigDecimal rentabilidadeFundo = totalValorAtual
+//				.subtract(totalValorAplicado)
+//				.divide(totalValorAplicado, 2, RoundingMode.DOWN)
+//				.multiply(new BigDecimal("100.00"));
+//		BigDecimal rentabilidadeEquivSELIC = totalValorEquivSELIC
+//				.subtract(totalValorAplicado)
+//				.divide(totalValorAplicado, 2, RoundingMode.DOWN)
+//				.multiply(new BigDecimal("100.00"));
+//
+//		return new ComparacaoInvestimentoVersusSELIC(e.getFundoInvestimento().getNome(),
+//				rentabilidadeFundo, rentabilidadeEquivSELIC,
+//				totalDiferencaSELIC, totalValorAtual, totalValorEquivSELIC);
+//	}
 
 	
 

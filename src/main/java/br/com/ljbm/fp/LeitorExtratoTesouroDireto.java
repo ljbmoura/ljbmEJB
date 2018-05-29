@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
+import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.utilitarios.Data;
 import br.com.ljbm.utilitarios.FormatadorBR;
 
@@ -27,11 +28,12 @@ public class LeitorExtratoTesouroDireto {
 	private String caminhoArquivoExtrato;
 	private List<PosicaoTituloPorAgente> extratoTD;
 
-	public LeitorExtratoTesouroDireto(String caminhoArquivoExtrato) {
+	public LeitorExtratoTesouroDireto caminhoArquivoExtratoTD(String caminhoArquivoExtrato) {
 		this.caminhoArquivoExtrato = caminhoArquivoExtrato;
+		return this;
 	}
 
-	public void le() throws IOException {
+	public List<PosicaoTituloPorAgente> le() throws IOException {
 
 		BufferedReader leitorArquivo = new BufferedReader(new FileReader(caminhoArquivoExtrato));
 		String linha;
@@ -74,9 +76,6 @@ public class LeitorExtratoTesouroDireto {
 				leitorArquivo.close();
 			}
 		}
-	}
-
-	public List<PosicaoTituloPorAgente> extratoLido() {
 		return extratoTD;
 	}
 

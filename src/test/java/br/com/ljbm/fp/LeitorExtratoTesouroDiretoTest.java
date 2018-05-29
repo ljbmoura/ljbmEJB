@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
+import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.utilitarios.Recurso;
 
 public class LeitorExtratoTesouroDiretoTest {
@@ -46,11 +47,11 @@ public class LeitorExtratoTesouroDiretoTest {
 	public void extratoComUmFundoEDuasCompras() throws IOException {
 		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator + "extratoComUmFundoEDuasCompras.txt";
 		log.info("testando extrato : " + caminhoArquivoExtrato);
-		leitor = new LeitorExtratoTesouroDireto(caminhoArquivoExtrato);
 
-		leitor.le();
-
-		List<PosicaoTituloPorAgente> extrato = leitor.extratoLido();
+		List<PosicaoTituloPorAgente> extrato = 
+				new LeitorExtratoTesouroDireto()
+					.caminhoArquivoExtratoTD(caminhoArquivoExtrato)
+					.le();
 		assertThat(extrato.size(), equalTo(1));
 
 		PosicaoTituloPorAgente posicao = extrato.get(0);
@@ -76,11 +77,11 @@ public class LeitorExtratoTesouroDiretoTest {
 		String caminhoArquivoExtrato = pastaExtratos.getPath() + File.separator 
 				+ "extratoComDoisFundos.txt";
 		log.info("testando extrato : " + caminhoArquivoExtrato);
-		leitor = new LeitorExtratoTesouroDireto(caminhoArquivoExtrato);
-
-		leitor.le();
-
-		List<PosicaoTituloPorAgente> extrato = leitor.extratoLido();
+		
+		List<PosicaoTituloPorAgente> extrato = 
+				new LeitorExtratoTesouroDireto()
+					.caminhoArquivoExtratoTD(caminhoArquivoExtrato)
+					.le();
 		assertThat(extrato.size(), equalTo(2));
 
 		PosicaoTituloPorAgente posicao = extrato.get(0);

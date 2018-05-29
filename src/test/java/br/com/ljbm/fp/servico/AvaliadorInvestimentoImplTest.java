@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.com.ljbm.fp.LeitorExtratoTesouroDireto;
-import br.com.ljbm.fp.PosicaoTituloPorAgente;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.utilitarios.Recurso;
 import br.com.ljbm.ws.bc.Selic;
@@ -64,19 +63,19 @@ public class AvaliadorInvestimentoImplTest {
 	@Test
 	public void test() throws IOException {
 		
-		LeitorExtratoTesouroDireto leitor = new LeitorExtratoTesouroDireto(resourcesDir.getPath() + File.separator + "cestasComprasTDTest.txt");
-		leitor.le();
-		
 		AvaliadorInvestimentoImpl 
 			avaliador = new AvaliadorInvestimentoImpl(
-					leitor
-				, selicService
+				selicService
 				, new CotacaoTituloDAO()
 				, log
 				, servicoFPDominio);
 
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = avaliador
-				.comparaInvestimentosComSELIC("25/05/2018");
+				.comparaInvestimentosComSELIC(
+						new LeitorExtratoTesouroDireto()
+							.caminhoArquivoExtratoTD(resourcesDir.getPath()+ File.separator + "cestasComprasTDTest.txt")
+							.le()
+						,"25/05/2018");
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 	}
 
