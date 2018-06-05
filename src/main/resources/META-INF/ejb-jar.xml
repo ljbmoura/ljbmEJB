@@ -38,11 +38,11 @@
 		</session>
 	</enterprise-beans>
 
-	<assembly-descriptor>
-		<interceptor-binding>
-			<ejb-name>FPDominioImpl</ejb-name>
-			<interceptor-class>br.com.ljbm.fp.interceptador.LogDesempenho</interceptor-class>
-		</interceptor-binding>
-	</assembly-descriptor>
+<!-- 	<assembly-descriptor> -->
+<!-- 		<interceptor-binding> -->
+<!-- 			<ejb-name>FPDominioImpl</ejb-name> -->
+<!-- 			<interceptor-class>br.com.ljbm.fp.interceptador.LogDesempenho</interceptor-class> -->
+<!-- 		</interceptor-binding> -->
+<!-- 	</assembly-descriptor> -->
 
 </ejb-jar>

@@ -39,13 +39,13 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
  */
 @Stateless
 @Remote(FPDominio.class)
-//@Interceptors(value={LogDesempenho.class})
+// @Interceptors(value={LogDesempenho.class})
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class FPDominioImpl implements FPDominio {
 
 	@PersistenceContext
 	private EntityManager em;
-	
+
 	@Inject
 	Logger log;
 
@@ -61,14 +61,10 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Corretora addCorretora(Corretora corretora) throws FPException {
-		try {
-			em.persist(corretora);
-			return corretora;
-		} catch (EntityExistsException ex) {
-			throw new FPException("Corretora, Duplicate Ide : " + corretora.getIde());
-		}
+		em.persist(corretora);
+		return corretora;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -78,13 +74,8 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) {
-//		try {
-			em.persist(fundoInvestimento);
-			return fundoInvestimento;
-//		} catch (PersistenceException pe) {
-//			log.error(pe.getMessage());
-//			throw new FPException(String.format("Erro ao inserir FundoInvestimento: %s ", pe.getMessage()));
-//		}
+		em.persist(fundoInvestimento);
+		return fundoInvestimento;
 	}
 
 	/*
@@ -130,7 +121,7 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
-		
+
 		FundoInvestimento fundoInvestimento = em.find(FundoInvestimento.class, ide);
 		if (fundoInvestimento == null) {
 			throw new FPException("FundoInvestimento, record for ide = " + ide + " not found");
@@ -142,24 +133,28 @@ public class FPDominioImpl implements FPDominio {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
+	 * @see
+	 * br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimentoByAgenteCustodiaETitulo(
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public FundoInvestimento getFundoInvestimento(String agente, String titulo) throws FPException, NoResultException {
-		
-		TypedQuery<FundoInvestimento> query = 
-				em.createQuery("select fi from FundoInvestimento fi join fetch fi.corretora c where fi.nome=:titulo and c.razaoSocial=:agente", FundoInvestimento.class);
-		query.setParameter("agente", agente);
-		query.setParameter("titulo", titulo);
-		FundoInvestimento fundoInvestimento = query.getSingleResult();
-		if (fundoInvestimento == null) {
-			throw new FPException("FundoInvestimento, Record not found");
-		} else {
-			return fundoInvestimento;
-		}
+	public List<FundoInvestimento> getFundoInvestimentoByAgenteCustodiaETitulo(String agenteCustodia,
+			String nomeTitulo) {
+
+		TypedQuery<FundoInvestimento> query = em.createQuery(
+				"select fi from FundoInvestimento fi join fi.corretora c where fi.nome=:titulo and c.razaoSocial=:agente",
+				FundoInvestimento.class);
+		query.setParameter("agente", agenteCustodia);
+		query.setParameter("titulo", nomeTitulo);
+		return query.getResultList();
+		// if (fundoInvestimento == null) {
+		// throw new FPException("FundoInvestimento, record not found");
+		// } else {
+		// return fundoInvestimento;
+		// }
 	}
-	
+
 	@Override
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj) throws FPException {
@@ -201,11 +196,11 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAllFundoInvestimento()
 	 */
 	@Override
-//	@SuppressWarnings("unchecked")
+	// @SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<FundoInvestimento> getAllFundoInvestimento() {
 
-//		return em.createNamedQuery("FundoInvestimento.Todos").getResultList();
+		// return em.createNamedQuery("FundoInvestimento.Todos").getResultList();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<FundoInvestimento> criteria = cb.createQuery(FundoInvestimento.class);
 		Root<FundoInvestimento> fundoInvestimento = criteria.from(FundoInvestimento.class);
@@ -237,12 +232,9 @@ public class FPDominioImpl implements FPDominio {
 	 * .Aplicacao)
 	 */
 	@Override
-	public void addAplicacao(Aplicacao aplicacao) throws FPException {
-		try {
-			em.persist(aplicacao);
-		} catch (EntityExistsException exe) {
-			throw new FPException("Aplicacao, Duplicate Ide : " + aplicacao.getDocumento());
-		}
+	public Aplicacao addAplicacao(Aplicacao aplicacao) throws FPException {
+		em.persist(aplicacao);
+		return aplicacao;
 	}
 
 	/*
@@ -322,7 +314,7 @@ public class FPDominioImpl implements FPDominio {
 			return obj;
 		}
 	}
-	
+
 	@Override
 	public Corretora getFundosCorretora(Long ide) {
 
