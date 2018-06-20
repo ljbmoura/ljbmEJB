@@ -34,7 +34,14 @@
 			<PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
 			<DefaultRolloverStrategy min="1" max="30"/>
 		</RollingFile>
-		
+		<RollingFile name="chamadasHttp" fileName="${basedir}/chamadasHttp.log" filePattern="${basedir}/chamadasHttp-%d{yyyy-MM-dd}-%i.log.zip">
+		    <Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<PatternLayout pattern="%-5p %d{yyyy-MM-dd HH:mm:ss,SSS} (%.5thread) %c{3}: %m%n%xEx" charset="UTF-8"/>
+			<DefaultRolloverStrategy min="1" max="30"/>
+		</RollingFile>		
 <!--		<Async name="AsyncSTDOUT">
 			<AppenderRef ref="STDOUT"/> 
 		</Async>
@@ -51,7 +58,9 @@
 		<Logger name="br.com.ljbm.fp.interceptador.LogDesempenho" level="debug" additivity="false">
 			<AppenderRef ref="desempenhoMetodo" />
 		</Logger>
-
+		<Logger name="br.com.ljbm.fp.interceptador.HttpInterceptor" level="debug" additivity="false">
+			<AppenderRef ref="chamadasHttp" />
+		</Logger>
 		<Logger name="br.com.ljbm" level="debug" />
 		
 		<Logger name="org.hibernate.validator" level="info" />

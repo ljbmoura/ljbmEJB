@@ -307,11 +307,12 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	public Corretora getCorretora(Long ide) throws FPException {
 		Corretora obj = em.find(Corretora.class, ide);
-		if (obj == null) {
-			log.info("Corretora, Record for ide " + ide + " not found");
-			throw new FPException("Corretora, Record for ide " + ide + " not found");
-		} else {
+		if (obj != null) {
 			return obj;
+		} else {
+			String message = String.format("Corretora, Record for id %d not found", ide);
+			log.debug(message);
+			throw new FPException(message);
 		}
 	}
 
