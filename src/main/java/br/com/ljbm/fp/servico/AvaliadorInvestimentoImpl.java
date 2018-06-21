@@ -93,8 +93,12 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		
 		for (Aplicacao compra : posicao.getCompras()) {
 			
-					
-			BigDecimal fatorRemuneracaoAcumuladaSELIC = selicWS.fatorAcumuladoSelic(compra.getDataCompra(), dataAlvo);
+			BigDecimal fatorRemuneracaoAcumuladaSELIC = model.getCoeficienteSELIC(compra.getDataCompra(), dataAlvo);
+			if (fatorRemuneracaoAcumuladaSELIC == null) {				
+				fatorRemuneracaoAcumuladaSELIC = selicWS.fatorAcumuladoSelic(compra.getDataCompra(), dataAlvo);
+				model.addCoeficienteSELIC(compra.getDataCompra(), dataAlvo, fatorRemuneracaoAcumuladaSELIC);
+			}
+			
 			
 			BigDecimal vEquivalenteSELIC = compra.getValorAplicado().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(

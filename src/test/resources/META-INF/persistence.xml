@@ -14,6 +14,7 @@
 		<class>br.com.ljbm.fp.modelo.Corretora</class>
 		<class>br.com.ljbm.fp.modelo.FundoInvestimento</class>
 		<class>br.com.ljbm.fp.modelo.Aplicacao</class>
+		<class>br.com.ljbm.fp.modelo.SerieCoeficienteSELIC</class>
 
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		

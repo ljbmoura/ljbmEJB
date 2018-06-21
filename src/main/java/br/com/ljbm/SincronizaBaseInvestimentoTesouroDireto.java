@@ -35,17 +35,15 @@ public class SincronizaBaseInvestimentoTesouroDireto {
 	
 	static private com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
 	static {
-		objectMapper.enable(
-				SerializationFeature.WRAP_ROOT_VALUE, SerializationFeature.WRITE_ENUMS_USING_INDEX, SerializationFeature.INDENT_OUTPUT);
-
 		objectMapper
-				.registerModule(new JavaTimeModule()) 	// new module, NOT JSR310Module
+		.registerModule(new JavaTimeModule()) 	// new module, NOT JSR310Module
 //				   .registerModule(new ParameterNamesModule())
 //				   .registerModule(new Jdk8Module())
-			; 
+		; 
+
 		SimpleDateFormat formatoDataBR = new SimpleDateFormat("yyyy-MM-dd");
 		objectMapper.setDateFormat(formatoDataBR);
-
+		
 		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		objectMapper.enable(
 				 SerializationFeature.WRAP_ROOT_VALUE

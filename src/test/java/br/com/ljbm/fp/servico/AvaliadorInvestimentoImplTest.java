@@ -2,6 +2,7 @@ package br.com.ljbm.fp.servico;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,10 +15,14 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.ljbm.fp.LeitorExtratoTesouroDireto;
+import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
+import br.com.ljbm.fp.modelo.FundoInvestimento;
+import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.utilitarios.Recurso;
 import br.com.ljbm.ws.bc.Selic;
 
@@ -61,6 +66,7 @@ public class AvaliadorInvestimentoImplTest {
 	}
 
 	@Test
+	@Ignore
 	public void test() throws IOException {
 		
 		AvaliadorInvestimentoImpl 
@@ -79,4 +85,33 @@ public class AvaliadorInvestimentoImplTest {
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 	}
 
+	@Test
+	public void test2() throws IOException {
+		
+		AvaliadorInvestimentoImpl 
+			avaliador = new AvaliadorInvestimentoImpl(
+				selicService
+				, new CotacaoTituloDAO()
+				, log
+				, servicoFPDominio);
+		
+		List<PosicaoTituloPorAgente> extrato = new ArrayList<PosicaoTituloPorAgente>(); 
+		List<FundoInvestimento> fundos = servicoFPDominio.getAllFundoInvestimento();
+		fundos.stream().forEach(fundo -> {
+//			fundo.getAplicacoes().stream().forEach(aplicacao -> {
+//				log.debug(aplicacao);
+//			});
+			PosicaoTituloPorAgente posicao = new PosicaoTituloPorAgente();
+			posicao.setAgenteCustodia(fundo.getCorretora().getRazaoSocial());
+			posicao.setTitulo(fundo.getNome());
+			posicao.setCompras(fundo.getAplicacoes());
+			extrato.add(posicao);
+		});
+		List<ComparacaoInvestimentoVersusSELIC> comparativo = 
+				avaliador.comparaInvestimentosComSELIC(
+						extrato
+						,"06/04/2018");
+		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
+	}
 }
+

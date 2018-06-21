@@ -27,6 +27,9 @@ public class CotacaoTituloDAO {
 					new HashMap<String, BigDecimal>() 
 					{
 						{
+							put("Tesouro IPCA+ 2019", new BigDecimal("2995.76"));
+							put("Tesouro Prefixado 2019", new BigDecimal("956.43"));
+							put("Tesouro Prefixado 2023", new BigDecimal("661.08"));							
 							put("Tesouro IPCA+ 2024", new BigDecimal("2296.890000000"));
 							put("Tesouro IPCA+ 2035", new BigDecimal("1247.350000000"));
 						}

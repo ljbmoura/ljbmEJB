@@ -3,6 +3,8 @@
  */
 package br.com.ljbm.fp.servico;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 //import org.hibernate.cache.ehcache.*;.*;
 import java.util.List;
 
@@ -13,7 +15,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.Corretora;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
+import br.com.ljbm.fp.modelo.SerieCoeficienteSELIC;
 
 /**
  * Financas pessoais acesso ao modelo, implementacao
@@ -277,10 +279,11 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAplicacao(java.lang.Long)
 	 */
 	@Override
-	public Aplicacao getAplicacao(Long documento) throws FPException {
-		Aplicacao aplicacao = em.find(Aplicacao.class, documento);
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Aplicacao getAplicacao(Long ide) throws FPException {
+		Aplicacao aplicacao = em.find(Aplicacao.class, ide);
 		if (aplicacao == null) {
-			throw new FPException("Aplicacao, Record for " + documento + " not found");
+			throw new FPException("Aplicacao, Record for " + ide + " not found");
 		} else {
 			return aplicacao;
 		}
@@ -323,6 +326,31 @@ public class FPDominioImpl implements FPDominio {
 				"select c from Corretora c join fetch c.fundosComprados where c.ide=:ide", Corretora.class);
 		query.setParameter("ide", ide);
 		return query.getSingleResult();
+	}
+
+	@Override
+	public BigDecimal getCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo) {
+		TypedQuery<BigDecimal> query = em.createQuery(
+				"select c.fator from SerieCoeficienteSELIC c where c.dataInicio=:dataCompra and c.dataFim=:dataAlvo"
+				, BigDecimal.class);
+		query.setParameter("dataCompra", dataCompra);
+		query.setParameter("dataAlvo", dataAlvo);
+		try {
+			return query.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
+	}
+
+	@Override
+	public void addCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo,
+			BigDecimal fatorRemuneracaoAcumuladaSELIC) {
+		SerieCoeficienteSELIC x = new SerieCoeficienteSELIC();
+		x.setDataFim(dataAlvo);
+		x.setDataInicio(dataCompra);
+		x.setFator(fatorRemuneracaoAcumuladaSELIC);
+		em.persist(x);
+		
 	}
 
 	// public FundoInvestimento[] getAllLancamentoCCbyTipoHistorico(Short ide)
