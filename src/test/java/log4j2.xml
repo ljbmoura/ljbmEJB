@@ -13,9 +13,9 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="br.com.ljbm" level="debug" />
+		<Logger name="br.com.ljbm" level="info" />
 
-		<Logger name="org.hibernate" level="info" />
+		<Logger name="org.hibernate" level="warn" />
 		<Logger name="net.sf.ehcache" level="info" />
 		<Logger name="org.hibernate.validator" level="warn" />
 		<Logger name="org.hibernate.SQL" level="warn" />

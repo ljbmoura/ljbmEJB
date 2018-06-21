@@ -207,6 +207,10 @@ public class FPDominioImpl implements FPDominio {
 		CriteriaQuery<FundoInvestimento> criteria = cb.createQuery(FundoInvestimento.class);
 		Root<FundoInvestimento> fundoInvestimento = criteria.from(FundoInvestimento.class);
 		criteria.select(fundoInvestimento);
+		criteria.select(fundoInvestimento)
+			.orderBy(
+					cb.asc(fundoInvestimento.get("corretora"))
+					, cb.asc(fundoInvestimento.get("nome")));
 		return em.createQuery(criteria).getResultList();
 	}
 

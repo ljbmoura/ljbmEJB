@@ -57,12 +57,15 @@ public class AvaliadorInvestimentoImplTest {
 		selicService = new Selic(log);
 		em = entityManagerFactory.createEntityManager();
 		servicoFPDominio = new FPDominioImpl(em, log);
-//		em.getTransaction().begin();
+		em.getTransaction().begin();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-//		em.getTransaction().commit();
+		if (em.getTransaction().isActive()) {
+			em.getTransaction().commit();
+		}
+		em.close(); // ponto em que as estatísticas do ehcache são relatadas
 	}
 
 	@Test
@@ -102,7 +105,7 @@ public class AvaliadorInvestimentoImplTest {
 //				log.debug(aplicacao);
 //			});
 			PosicaoTituloPorAgente posicao = new PosicaoTituloPorAgente();
-			posicao.setAgenteCustodia(fundo.getCorretora().getRazaoSocial());
+			posicao.setAgenteCustodia(fundo.getCorretora().getSigla());
 			posicao.setTitulo(fundo.getNome());
 			posicao.setCompras(fundo.getAplicacoes());
 			extrato.add(posicao);
@@ -110,7 +113,9 @@ public class AvaliadorInvestimentoImplTest {
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = 
 				avaliador.comparaInvestimentosComSELIC(
 						extrato
-						,"06/04/2018");
+//						,"25/05/2018");
+//						,"06/04/2018");
+						,"21/06/2018");
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 	}
 }
