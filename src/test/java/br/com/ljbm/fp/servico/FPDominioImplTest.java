@@ -33,17 +33,20 @@ public class FPDominioImplTest {
 	private static Logger log;
 
 	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManagerFactory fabricaEMSeries;
 
 	private static Corretora bB;
 	private static Corretora agora;
 	private static List<Long> idesFundosInseridos;
 
 	private EntityManager em;
+	private EntityManager emSeries;
 	private FPDominioImpl servico;
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("ljbmUPTeste", null);
+		entityManagerFactory = Persistence.createEntityManagerFactory("ljbmFPTeste", null);
+		fabricaEMSeries = Persistence.createEntityManagerFactory("ljbmSeries", null);
 		log = LogManager.getFormatterLogger(FPDominioImplTest.class);
 		idesFundosInseridos = new ArrayList<Long>();
 	}
@@ -55,7 +58,8 @@ public class FPDominioImplTest {
 	@Before
 	public void setUp() throws Exception {
 		em = entityManagerFactory.createEntityManager();
-		servico = new FPDominioImpl(em, log);
+		emSeries = fabricaEMSeries.createEntityManager();
+		servico = new FPDominioImpl(em, emSeries, log);
 		em.getTransaction().begin();
 	}
 

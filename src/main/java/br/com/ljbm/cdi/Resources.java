@@ -29,7 +29,7 @@ public class Resources {
     };
     
 
-    @PersistenceContext(unitName = "ljbmUP")
+    @PersistenceContext(unitName = "ljbmFP")
     private EntityManager entityManager; 
    
 }

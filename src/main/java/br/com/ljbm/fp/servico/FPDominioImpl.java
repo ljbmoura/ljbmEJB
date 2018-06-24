@@ -48,15 +48,19 @@ public class FPDominioImpl implements FPDominio {
 	@PersistenceContext
 	private EntityManager em;
 
+	@PersistenceContext
+	private EntityManager emSeries;
+	
 	@Inject
 	Logger log;
 
 	public FPDominioImpl() {
 	}
 
-	public FPDominioImpl(EntityManager em, Logger log) {
+	public FPDominioImpl(EntityManager em, EntityManager emSeries, Logger log) {
 		super();
 		this.em = em;
+		this.emSeries = emSeries;
 		this.log = log;
 	}
 
@@ -334,7 +338,7 @@ public class FPDominioImpl implements FPDominio {
 
 	@Override
 	public BigDecimal getCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo) {
-		TypedQuery<BigDecimal> query = em.createQuery(
+		TypedQuery<BigDecimal> query = emSeries.createQuery(
 				"select c.fator from SerieCoeficienteSELIC c where c.dataInicio=:dataCompra and c.dataFim=:dataAlvo"
 				, BigDecimal.class);
 		query.setParameter("dataCompra", dataCompra);
@@ -353,7 +357,7 @@ public class FPDominioImpl implements FPDominio {
 		x.setDataFim(dataAlvo);
 		x.setDataInicio(dataCompra);
 		x.setFator(fatorRemuneracaoAcumuladaSELIC);
-		em.persist(x);
+		emSeries.persist(x);
 		
 	}
 

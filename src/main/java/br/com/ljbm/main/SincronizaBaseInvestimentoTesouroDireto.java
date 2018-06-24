@@ -1,4 +1,4 @@
-package br.com.ljbm;
+package br.com.ljbm.main;
 
 import static br.com.ljbm.fp.modelo.Corretora.cnpjAgora;
 import static br.com.ljbm.fp.modelo.Corretora.cnpjBB;
