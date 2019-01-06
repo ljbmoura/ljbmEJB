@@ -32,7 +32,10 @@ import com.sun.jersey.api.client.WebResource;
  */
 public class Selic {
 
-	private static final String WS_BC_FATORES_ACUMULADOS = "https://www3.bcb.gov.br/selic/rest/fatoresAcumulados/pub/search";
+//	private static final String WS_BC_FATORES_ACUMULADOS = "https://www3.bcb.gov.br/selic/rest/fatoresAcumulados/pub/search";
+	private static final String WS_BC_FATORES_ACUMULADOS = "https://www3.bcb.gov.br/novoselic/rest/fatoresAcumulados/pub/search";//?parametrosOrdenacao=[{\"nome\":\"periodo\",\"decrescente\":false}]&page=1&pageSize=20";
+	
+	
 	private static final DateTimeFormatter FORMATO_DATA_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	//@Inject
@@ -57,7 +60,10 @@ public class Selic {
 //				.add("ano", "")
 				.build().toString();
 		
-		ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE) .post(ClientResponse.class, jsonParams);
+		ClientResponse response = webResource
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.header("Accept", "application/json, text/plain, */*")
+				.post(ClientResponse.class, jsonParams);
 
 		if (response.getStatus() != HttpURLConnection.HTTP_OK) {
 			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
@@ -66,8 +72,9 @@ public class Selic {
 		String output = response.getEntity(String.class);
 		log.debug(output);
 		BigDecimal fator;
-						
-		Pattern pattern = Pattern.compile("fator:\\s([\\d|\\.]+)\\,");
+		
+		//{"totalItems":1,"registros":[{"periodo":"19/04/2007 a 21/06/2018","fator":3.11506402336271,"fatorFormatado":"3,11506402336271"}],"observacoes":[],"dataAtual":"06/01/2019 às 18:50:51"}						
+		Pattern pattern = Pattern.compile("\"fator\":([\\d|\\.]+)\\,");
 		Matcher matcher = pattern.matcher(output); 
 		
 		if (matcher.find()) {

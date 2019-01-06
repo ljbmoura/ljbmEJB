@@ -76,17 +76,20 @@ public class FPDominioImplTest {
 		em.createQuery("delete from FundoInvestimento").executeUpdate();
 		em.createQuery("delete from Corretora").executeUpdate();
 
+		agora = new Corretora();
+		agora.setIde(1l);
+		agora.setCnpj(cnpjAgora);
+		agora.setRazaoSocial("AGORA CTVM S/A - 131836");
+		agora.setSigla("Agora");
+		servico.addCorretora(agora);
+
 		bB = new Corretora();
+		bB.setIde(2l);
 		bB.setCnpj("00000000000191");
 		bB.setRazaoSocial("BB BANCO DE INVESTIMENTO S/A - 1102303");
 		bB.setSigla("BB");
 		servico.addCorretora(bB);
 
-		agora = new Corretora();
-		agora.setCnpj(cnpjAgora);
-		agora.setRazaoSocial("AGORA CTVM S/A - 131836");
-		agora.setSigla("Agora");
-		servico.addCorretora(agora);
 	}
 
 	@Test

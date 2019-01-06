@@ -18,16 +18,16 @@
 		
 		<properties>
 			<!-- Propriedades JDBC -->
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/ljbmteste?relaxAutoCommit=true" />
+				value="jdbc:jtds:sqlserver://localhost:1433;databaseName=ljbm" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root" />
 
 			<!-- Configurações específicas do Hibernate -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2008Dialect"/>        
 <!-- 			<property name="hibernate.hbm2ddl.auto" value="update" /> -->
-			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 <!-- 			<property name="hibernate.connection.release_mode" value="after_statement" /> -->
 <!-- 			<property name="hibernate.connection.release_mode" value="after_transaction" /> -->
@@ -52,14 +52,15 @@
 		
 		<properties>
 			<!-- Propriedades JDBC -->
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/ljbmseries?relaxAutoCommit=true" />
+				value="jdbc:jtds:sqlserver://localhost:1433;databaseName=ljbm" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root" />
 
 			<!-- Configurações específicas do Hibernate -->
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+				<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2008Dialect"/>        
+			
 <!-- 			<property name="hibernate.hbm2ddl.auto" value="update" /> -->
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
@@ -76,4 +77,3 @@
 		</properties>
 	</persistence-unit>
 	
-</persistence>

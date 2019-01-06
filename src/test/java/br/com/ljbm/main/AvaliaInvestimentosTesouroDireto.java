@@ -50,6 +50,7 @@ public class AvaliaInvestimentosTesouroDireto {
 		servicoFPDominio = new FPDominioImpl(em, emSeries, log);
 		
 		em.getTransaction().begin();
+		emSeries.getTransaction().begin();
 		
 		AvaliadorInvestimentoImpl 
 		avaliador = new AvaliadorInvestimentoImpl(
@@ -70,15 +71,21 @@ public class AvaliaInvestimentosTesouroDireto {
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = 
 				avaliador.comparaInvestimentosComSELIC(
 						extrato
-	//					,"25/05/2018");
-	//					,"06/04/2018");
-						,"21/06/2018");
+//						,"25/05/2018");
+//						,"06/04/2018");
+//						,"21/06/2018");
+						,"03/01/2019");
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 			
 		if (em.getTransaction().isActive()) {
 			em.getTransaction().commit();
 		}
 		em.close(); // ponto em que as estatísticas do ehcache são relatadas
+		if (emSeries.getTransaction().isActive()) {
+			emSeries.getTransaction().commit();
+		}		
+		emSeries.close();
+		System.exit(0);
 	}
 }
 

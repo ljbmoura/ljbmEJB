@@ -17,10 +17,10 @@
 		<feature>jndi-1.0</feature>
 		<feature>localConnector-1.0</feature>
 		<feature>jsf-2.2</feature>
+		<feature>ejbRemote-3.2</feature>
 		<!-- <feature>webProfile-7.0</feature> -->
 	</featureManager>
 
-	<cdi12 enableImplicitBeanArchives="false"/>
 
 	<!-- Define an Administrator and non-Administrator -->
 <!-- 	<basicRegistry id="basic">
@@ -39,16 +39,26 @@
 		the following element, e.g. host="*" -->
 	<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"/>
 
+ 	<include location="${shared.config.dir}/jdbc/sqljdbc4-4.2.xml" optional="false"/> 
+ 	
+	<dataSource id="ljbm_sql" jdbcDriverRef="sqljdbc4-4.2" jndiName="jdbc/ljbmDS" type="javax.sql.DataSource">
+	    <properties.microsoft.sqlserver databaseName="ljbm" password="root" portNumber="1433" serverName="PC" user="root"/>
+	</dataSource>
+<!--	
 	<include location="${shared.config.dir}/jdbc/mysql-connector-java-5.1.35.xml" optional="false"/>
-
+	
 	<dataSource id="ljbm_mysql" jdbcDriverRef="mysql-connector-java-5.1.35" jndiName="jdbc/ljbmDS" type="javax.sql.DataSource">
 		<properties password="root" url="jdbc:mysql://localhost:3306/ljbm?relaxAutoCommit=true" user="root"/>
 	</dataSource>
+-->
 
 	<!-- Automatically expand WAR files and EAR files -->
 	<applicationManager autoExpand="true"/>
 
-	<enterpriseApplication id="ljbmEAR" location="ljbmEAR-0.0.1-SNAPSHOT.ear" name="ljbmEAR"/>
-
     <applicationMonitor updateTrigger="mbean"/>
+	<cdi12 enableImplicitBeanArchives="false"/>
+
+    <enterpriseApplication id="ljbmEAR" location="ljbmEAR.ear" name="ljbmEAR"/>
+
+    <webApplication id="ljbmWeb" location="ljbmWeb.war" name="ljbmWeb"/>
 </server>

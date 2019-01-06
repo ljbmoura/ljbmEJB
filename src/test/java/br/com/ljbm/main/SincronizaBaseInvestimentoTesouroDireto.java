@@ -66,10 +66,10 @@ public class SincronizaBaseInvestimentoTesouroDireto {
 		baseURI = "http://localhost:9080";
 		basePath = "/ljbmWeb/rest";
 		
-		bB = new Corretora();
-		bB.setIde(1l);
 		agora = new Corretora();
-		agora.setIde(2l);		
+		agora.setIde(1l);		
+		bB = new Corretora();
+		bB.setIde(2l);
 		
 		List<PosicaoTituloPorAgente> extrato = 
 				new LeitorExtratoTesouroDireto()
