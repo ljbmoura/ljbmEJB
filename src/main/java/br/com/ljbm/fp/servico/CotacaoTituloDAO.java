@@ -48,7 +48,16 @@ public class CotacaoTituloDAO {
 						}
 					});
 
-
+			put(LocalDate.of(2019, 01, 04), 
+					new HashMap<String, BigDecimal>() 
+					{
+						{
+							put("Tesouro IPCA+ 2024", new BigDecimal("2475.89"));
+							put("Tesouro IPCA+ 2035", new BigDecimal("1413.94"));
+							put("Tesouro Prefixado 2023", new BigDecimal("723.00"));
+							put("Tesouro Prefixado 2025", new BigDecimal("596.51"));
+						}
+					});
 		}
 	};
 

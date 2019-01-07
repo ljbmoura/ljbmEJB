@@ -137,7 +137,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	public void imprimeComparacaoInvestComSELIC(List<ComparacaoInvestimentoVersusSELIC> comparativo) {
 		System.out.println( 
-				String.format( "%30s %7s %7s %15s %15s %15s"
+				String.format( "%35s %7s %7s %15s %15s %15s"
 					,"fundo"
 					,"%Rentab"
 					,"%RSelic"
@@ -152,7 +152,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			System.out.println(
 				String.format( 
 
-					"%30s %7.2f %7.2f %,15.2f %,15.2f %,15.2f"
+					"%35s %7.2f %7.2f %,15.2f %,15.2f %,15.2f"
 					, r.getNomeInvestimento()
 
 					,r.getTaxaRentabilidadeFundo()
@@ -173,7 +173,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		System.out.println(
 				String.format( 
 
-					"%30s %7s %7s %,15.2f %,15.2f %,15.2f"
+					"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
 					, ""
 					, ""
 					, ""

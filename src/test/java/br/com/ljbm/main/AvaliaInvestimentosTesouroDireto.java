@@ -74,7 +74,7 @@ public class AvaliaInvestimentosTesouroDireto {
 //						,"25/05/2018");
 //						,"06/04/2018");
 //						,"21/06/2018");
-						,"03/01/2019");
+						,"04/01/2019");
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 			
 		if (em.getTransaction().isActive()) {
