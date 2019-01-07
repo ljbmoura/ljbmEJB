@@ -103,14 +103,17 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(
 					daoCotacoes.paraTituloEm(posicao.getTitulo(), dataAlvo), MC_BR);
 
-			log.debug(
+			System.out.println( 
 				String.format(
-					"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, fator %12.9f" 
-					, compra.getFundoInvestimento().getNome() 
-					, compra.getDataCompra().toString()
-					, vAtualBruto
-					, vEquivalenteSELIC
-					, fatorRemuneracaoAcumuladaSELIC, 9));
+						"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, diferença %,10.2f, fator %12.9f" 
+						, compra.getFundoInvestimento().getNome() 
+						, compra.getDataCompra().toString()
+						, vAtualBruto
+						, vEquivalenteSELIC
+						, vAtualBruto.subtract(vEquivalenteSELIC)
+						, fatorRemuneracaoAcumuladaSELIC
+					)
+				);
 
 			totalAplicado = totalAplicado.add(compra.getValorAplicadoRemanescente());
 			totalAtualBruto = totalAtualBruto.add(vAtualBruto);
