@@ -76,6 +76,18 @@ public class CotacaoTituloDAO {
 							put("Tesouro IPCA+ 2035", new BigDecimal("1413.94"));
 							put("Tesouro Prefixado 2023", new BigDecimal("723.00"));
 							put("Tesouro Prefixado 2025", new BigDecimal("596.51"));
+							put("BB Ações Energia",new BigDecimal("11.656781000"));
+							put("BB Ações Petrobras",new BigDecimal("7.499930000"));
+//							put("BB RF Pré LP Estilo", new BigDecimal("1"));
+							put("BB Ações Dividendos", new BigDecimal("16.179030645"));
+							put("BB Ações Exportação",new BigDecimal("7.908582269"));
+							put("BB Ações Vale",new BigDecimal("15.985051758"));
+							put("BB Ações PIBB", new BigDecimal("4.971429687"));
+							put("BB Ações Consumo", new BigDecimal("2.256197807"));
+							put("BB Ações Siderurgia", new BigDecimal("0.823749004"));
+							put("BB Ações BB", new BigDecimal("2.849427795"));
+							put("BB Ações Const Civil", new BigDecimal("1.187927375"));
+
 						}
 					});
 		}

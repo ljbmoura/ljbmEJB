@@ -203,7 +203,7 @@ public class LeitorExtratoInvestimentosBB {
 
 		// 24/02/2012 7,462610000 APLICACOES (+) 5.000,00
 		Pattern pattern = Pattern
-				.compile("(\\d{2}\\/\\d{2}\\/\\d{4})\\s+([\\d\\.\\,]*)\\s+APLICACOES.+");
+				.compile("(\\d{2}\\/\\d{2}\\/\\d{4})\\s+([\\d\\.\\,]*)\\s+APLICAÇÕES.+");
 		Matcher matcher;
 
 		while ((linha = leitorArquivo.readLine()) != null) {
