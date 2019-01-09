@@ -5,7 +5,15 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.apache.logging.log4j.Logger;
+
+
+
 public class CotacaoTituloDAO {
+	@Inject	
+	private Logger log;
 	// TODO criar tabela bd para cotações com cache
 	static Map<LocalDate, Map<String, BigDecimal>> cotacoes = 
 			new HashMap<LocalDate, Map<String, BigDecimal>>() 
@@ -32,7 +40,8 @@ public class CotacaoTituloDAO {
 							put("Tesouro IPCA+ 2024", new BigDecimal("2229.48"));
 							put("Tesouro IPCA+ 2035", new BigDecimal("1204.79"));
 							put("Tesouro Prefixado 2019", new BigDecimal("962.13"));
-							put("Tesouro Prefixado 2023", new BigDecimal("637.54"));
+							put("Tesouro Prefixado 2023", new BigDecimal("646.64"));
+							put("Tesouro Prefixado 2025", new BigDecimal("517.62")); 
 						}
 					});
 			
@@ -47,7 +56,18 @@ public class CotacaoTituloDAO {
 							put("Tesouro IPCA+ 2035", new BigDecimal("1247.350000000"));
 						}
 					});
+			
+			put(LocalDate.of(2018, 10, 16), 
+					new HashMap<String, BigDecimal>() 
+					{
+						{
+							put("Tesouro IPCA+ 2024", new BigDecimal("2380.49"));
+							put("Tesouro IPCA+ 2035", new BigDecimal("1339.35"));
+							put("Tesouro Prefixado 2023", new BigDecimal("680.27")); 
+							put("Tesouro Prefixado 2025", new BigDecimal("548.42")); 
 
+						}
+					});
 			put(LocalDate.of(2019, 01, 04), 
 					new HashMap<String, BigDecimal>() 
 					{
@@ -61,6 +81,10 @@ public class CotacaoTituloDAO {
 		}
 	};
 
+	public CotacaoTituloDAO(Logger log) {
+		this.log = log;
+	}
+
 	public BigDecimal paraTituloEm(String titulo, LocalDate em) {
 		Map<String, BigDecimal> x = cotacoes.get(em);
 		if (x != null) {
@@ -69,6 +93,7 @@ public class CotacaoTituloDAO {
 				return y;
 			}
 		}
+		log.warn(String.format("cotação não encontrada para o titulo '%s' em '%s'", titulo, em.toString()));
 		return BigDecimal.ZERO;
 	}
 	
