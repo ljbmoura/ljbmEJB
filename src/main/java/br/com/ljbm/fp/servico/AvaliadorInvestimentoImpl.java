@@ -15,6 +15,7 @@ import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
@@ -132,7 +133,9 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 				.multiply(new BigDecimal("100.00"))
 				;
 
-		return new ComparacaoInvestimentoVersusSELIC(posicao.getAgenteCustodia() +" "+ posicao.getTitulo(),
+		return new ComparacaoInvestimentoVersusSELIC(
+				posicao.getAgenteCustodia(), 
+				posicao.getTitulo(), 
 				rentabilidadeFundo, rentabilidadeEquivSELIC,
 				totalDiferencaSELIC, totalAtualBruto, totalEquivalenteSELIC);
 
@@ -140,8 +143,9 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	public void imprimeComparacaoInvestComSELIC(List<ComparacaoInvestimentoVersusSELIC> comparativo) {
 		System.out.println( 
-				String.format( "%35s %7s %7s %15s %15s %15s"
-					,"fundo"
+				String.format("%-10s %-24s %7s %7s %15s %15s %15s"
+					,"Corretora"	
+					,"Título/Fundo"
 					,"%Rentab"
 					,"%RSelic"
 					,"Diferença"
@@ -155,8 +159,10 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			System.out.println(
 				String.format( 
 
-					"%35s %7.2f %7.2f %,15.2f %,15.2f %,15.2f"
-					, r.getNomeInvestimento()
+					"%10s %-24s %7.2f %7.2f %,15.2f %,15.2f %,15.2f"
+					, r.getSiglaAgente()
+					
+					,r.getNomeInvestimento()
 
 					,r.getTaxaRentabilidadeFundo()
 
