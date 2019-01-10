@@ -1,4 +1,4 @@
-package br.com.ljbm.fp.servico;
+﻿package br.com.ljbm.fp.servico;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -78,7 +78,6 @@ public class CotacaoTituloDAO {
 							put("Tesouro Prefixado 2025", new BigDecimal("596.51"));
 							put("BB Ações Energia",new BigDecimal("11.656781000"));
 							put("BB Ações Petrobras",new BigDecimal("7.499930000"));
-//							put("BB RF Pré LP Estilo", new BigDecimal("1"));
 							put("BB Ações Dividendos", new BigDecimal("16.179030645"));
 							put("BB Ações Exportação",new BigDecimal("7.908582269"));
 							put("BB Ações Vale",new BigDecimal("15.985051758"));
@@ -90,6 +89,29 @@ public class CotacaoTituloDAO {
 
 						}
 					});
+			
+			put(LocalDate.of(2019, 01, 9), 
+					new HashMap<String, BigDecimal>() 
+					{
+						{
+							put("Tesouro IPCA+ 2024", new BigDecimal("2483.22"));
+							put("Tesouro IPCA+ 2035", new BigDecimal("1459.84"));
+							put("Tesouro Prefixado 2023", new BigDecimal("723.15"));
+							put("Tesouro Prefixado 2025", new BigDecimal("597.98"));
+
+							put("BB Ações Energia",new BigDecimal("11.693457000"));												
+							put("BB Ações Petrobras",new BigDecimal("7.814492000"));
+							put("BB Ações Dividendos", new BigDecimal("16.225454745"));
+							put("BB Ações Exportação",new BigDecimal("8.066576333"));
+							put("BB Ações Vale",new BigDecimal("16.439668866"));
+							put("BB Acoes Aloc ETF FI", new BigDecimal("5.052408403"));
+							put("BB Ações Consumo", new BigDecimal("2.287631391"));
+							put("BB Ações Siderurgia", new BigDecimal("0.839018384"));
+							put("BB Ações BB", new BigDecimal("2.790912649"));
+							put("BB Ações Const Civil", new BigDecimal("1.197746596"));
+							
+						}
+					});			
 		}
 	};
 
