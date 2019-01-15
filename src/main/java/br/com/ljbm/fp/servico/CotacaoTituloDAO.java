@@ -112,6 +112,52 @@ public class CotacaoTituloDAO {
 							
 						}
 					});			
+			put(LocalDate.of(2019, 01, 10), 
+					new HashMap<String, BigDecimal>() 
+					{
+						{
+							put("Tesouro IPCA+ 2024", new BigDecimal("2485.87"));
+							put("Tesouro IPCA+ 2035", new BigDecimal("1459.84"));
+							put("Tesouro Prefixado 2023", new BigDecimal("722.35"));
+							put("Tesouro Prefixado 2025", new BigDecimal("597.00"));
+
+							put("BB Ações Energia",		new BigDecimal("11.816338000"));												
+							put("BB Ações Petrobras",	new BigDecimal("7.767873000"));
+							put("BB Ações Dividendos", 	new BigDecimal("16.274040793"));
+							put("BB Ações Exportação",	new BigDecimal("8.050878283"));
+							put("BB Ações Vale",		new BigDecimal("16.258818616"));
+							put("BB Acoes Aloc ETF FI", new BigDecimal("5.064097736"));
+							put("BB Ações Consumo", 	new BigDecimal("2.314023258"));
+							put("BB Ações Siderurgia", 	new BigDecimal("0.838710723"));
+							put("BB Ações BB", 			new BigDecimal("2.831299483"));
+							put("BB Ações Const Civil", new BigDecimal("1.196936788"));
+							put("BB Ações BDR Nivel I", new BigDecimal("1.096759343"));
+							
+						}
+					});	
+			put(LocalDate.of(2019, 01, 14), 
+					new HashMap<String, BigDecimal>() 
+			{
+				{
+					put("Tesouro IPCA+ 2024", new BigDecimal("2486.96"));
+					put("Tesouro IPCA+ 2035", new BigDecimal("1474.99"));
+					put("Tesouro Prefixado 2023", new BigDecimal("723.88"));
+					put("Tesouro Prefixado 2025", new BigDecimal("598.06"));
+					
+					put("BB Ações Energia",		new BigDecimal("12.011539000"));												
+					put("BB Ações Petrobras",	new BigDecimal("7.677386000"));
+					put("BB Ações Dividendos", 	new BigDecimal("16.478736745"));
+					put("BB Ações Exportação",	new BigDecimal("8.045854577"));
+					put("BB Ações Vale",		new BigDecimal("16.104498855"));
+					put("BB Acoes Aloc ETF FI", new BigDecimal("5.111463956"));
+					put("BB Ações Consumo", 	new BigDecimal("2.346460816"));
+					put("BB Ações Siderurgia", 	new BigDecimal("0.817151996"));
+					put("BB Ações BB", 			new BigDecimal("2.908119414"));
+					put("BB Ações Const Civil", new BigDecimal("1.203882824"));
+					put("BB Ações BDR Nivel I", new BigDecimal("1.094493752"));
+					
+				}
+			});	
 		}
 	};
 
