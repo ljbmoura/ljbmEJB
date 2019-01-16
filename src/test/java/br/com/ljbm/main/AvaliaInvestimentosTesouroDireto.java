@@ -115,7 +115,7 @@ public class AvaliaInvestimentosTesouroDireto {
 //		BB         BB Ações Vale              36,53  107,57      -36.433,03       70.018,16      106.451,19
 //		                                                        -196.242,67    1.036.868,96    1.233.111,63		
 						
-					,"10/01/2019"); // supondo resgate com valor cota dia atual para TD e valor cota do dia anterior para ações
+//					,"10/01/2019"); // supondo resgate com valor cota dia atual para TD e valor cota do dia anterior para ações
 //		Corretora  Título/Fundo             %Rentab %RSelic       Diferença     Valor Fundo  Valor Eq Selic
 //		Agora      Tesouro IPCA+ 2024         15,58    9,49       15.251,77      289.603,86      274.352,09
 //		Agora      Tesouro IPCA+ 2035         58,80   69,77       -5.681,39       82.188,99       87.870,38
@@ -157,7 +157,7 @@ public class AvaliaInvestimentosTesouroDireto {
 //		BB         BB Ações Vale              33,75  107,72      -37.933,05       68.590,64      106.523,68
 //		                                                        -188.847,22    1.062.633,61    1.251.480,83		
 
-//					,"14/01/2019"); // supondo resgate com valor cota dia atual para TD e valor cota do dia anterior para ações
+					,"15/01/2019"); // supondo resgate com valor cota dia atual para TD e valor cota do dia anterior para ações
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);
 			
 		if (em.getTransaction().isActive()) {

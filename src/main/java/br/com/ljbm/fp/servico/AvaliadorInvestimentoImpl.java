@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
+import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
 import br.com.ljbm.utilitarios.FormatadorBR;
 import br.com.ljbm.ws.bc.Selic;
 
@@ -115,7 +116,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 						, fatorRemuneracaoAcumuladaSELIC
 					)
 				);
-
+			
 			totalAplicado = totalAplicado.add(compra.getValorAplicadoRemanescente());
 			totalAtualBruto = totalAtualBruto.add(vAtualBruto);
 			totalEquivalenteSELIC = totalEquivalenteSELIC.add(vEquivalenteSELIC);
@@ -136,6 +137,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		return new ComparacaoInvestimentoVersusSELIC(
 				posicao.getAgenteCustodia(), 
 				posicao.getTitulo(), 
+				posicao.getTipoFundoInvestimento(),
 				rentabilidadeFundo, rentabilidadeEquivSELIC,
 				totalDiferencaSELIC, totalAtualBruto, totalEquivalenteSELIC);
 
@@ -155,7 +157,33 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		BigDecimal totalFundos = BigDecimal.ZERO;
 		BigDecimal totalEqSelic = BigDecimal.ZERO;
 		BigDecimal totalDiferenca = BigDecimal.ZERO;
+		
+		BigDecimal subtotalFundos = BigDecimal.ZERO;
+		BigDecimal subtotalEqSelic = BigDecimal.ZERO;
+		BigDecimal subtotalDiferenca = BigDecimal.ZERO;
+		TipoFundoInvestimento tfi = comparativo.get(0).getTipoFundoInvestimento();
 		for (ComparacaoInvestimentoVersusSELIC r : comparativo) {
+			if (r.getTipoFundoInvestimento().equals(tfi)) {
+				subtotalFundos=subtotalFundos.add(r.getTotalValorFundo());
+				subtotalEqSelic=subtotalEqSelic.add(r.getTotalValorEquivalenteSELIC());
+				subtotalDiferenca=subtotalDiferenca.add(r.getDiferencaRentabilidadeFundoSELIC());
+			} else {
+				
+				System.out.println(String.format( 
+						"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
+						, ""
+						, ""
+						, ""
+						, subtotalDiferenca
+						, subtotalFundos
+						, subtotalEqSelic
+				) );
+				subtotalFundos = BigDecimal.ZERO;
+				subtotalEqSelic = BigDecimal.ZERO;
+				subtotalDiferenca = BigDecimal.ZERO;
+				tfi = r.getTipoFundoInvestimento();
+			}
+			
 			System.out.println(
 				String.format( 
 
@@ -175,10 +203,21 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 					,r.getTotalValorEquivalenteSELIC()
 
 			) );
+
 			totalDiferenca = totalDiferenca.add(r.getDiferencaRentabilidadeFundoSELIC());
 			totalFundos = totalFundos.add(r.getTotalValorFundo());
 			totalEqSelic = totalEqSelic.add(r.getTotalValorEquivalenteSELIC());
+			
 		}
+		System.out.println(String.format( 
+				"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
+				, ""
+				, ""
+				, ""
+				, subtotalDiferenca
+				, subtotalFundos
+				, subtotalEqSelic
+		) );		
 		System.out.println(
 				String.format( 
 
