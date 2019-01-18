@@ -182,6 +182,30 @@ public class CotacaoTituloDAO {
 					
 				}
 			});			
+			put(LocalDate.of(2019, 01, 17), 
+					new HashMap<String, String>() 
+			{
+				{
+					put("Tesouro IPCA+ 2024", 		"2493,17");
+					put("Tesouro IPCA+ 2035", 		"1487,88");
+					put("Tesouro Prefixado 2023", 	"721,17");
+					put("Tesouro Prefixado 2025", 	"595,10");
+					
+					put("BB Ações Energia",		"12,007915000");												
+					put("BB Ações Dividendos", 	"16,572053456");
+					put("BB Ações Exportação",	"8,180158828");
+					put("BB Ações Vale",		"16,597368459");
+					put("BB Acoes Aloc ETF FI", "5,151663844");
+					put("BB Ações Consumo", 	"2,390760513");
+					put("BB Ações BB", 			"2,857222066");
+					put("BB Ações Const Civil", "1,224191788");
+					put("BB Ações BDR Nivel I", "1,124166638");
+					
+					put("BB Ações Petrobras",	"7,775753000");
+					put("BB Ações Siderurgia", 	"0,818002434");
+					
+				}
+			});			
 		}
 	};
 

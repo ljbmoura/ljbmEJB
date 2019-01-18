@@ -15,7 +15,6 @@ import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
@@ -163,12 +162,8 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		BigDecimal subtotalDiferenca = BigDecimal.ZERO;
 		TipoFundoInvestimento tfi = comparativo.get(0).getTipoFundoInvestimento();
 		for (ComparacaoInvestimentoVersusSELIC r : comparativo) {
-			if (r.getTipoFundoInvestimento().equals(tfi)) {
-				subtotalFundos=subtotalFundos.add(r.getTotalValorFundo());
-				subtotalEqSelic=subtotalEqSelic.add(r.getTotalValorEquivalenteSELIC());
-				subtotalDiferenca=subtotalDiferenca.add(r.getDiferencaRentabilidadeFundoSELIC());
-			} else {
-				
+			// subtotal por TipoFundoInvestimento
+			if (!r.getTipoFundoInvestimento().equals(tfi)) {
 				System.out.println(String.format( 
 						"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
 						, ""
@@ -178,10 +173,10 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 						, subtotalFundos
 						, subtotalEqSelic
 				) );
+				tfi = r.getTipoFundoInvestimento();
 				subtotalFundos = BigDecimal.ZERO;
 				subtotalEqSelic = BigDecimal.ZERO;
 				subtotalDiferenca = BigDecimal.ZERO;
-				tfi = r.getTipoFundoInvestimento();
 			}
 			
 			System.out.println(
@@ -203,6 +198,9 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 					,r.getTotalValorEquivalenteSELIC()
 
 			) );
+			subtotalFundos=subtotalFundos.add(r.getTotalValorFundo());
+			subtotalEqSelic=subtotalEqSelic.add(r.getTotalValorEquivalenteSELIC());
+			subtotalDiferenca=subtotalDiferenca.add(r.getDiferencaRentabilidadeFundoSELIC());
 
 			totalDiferenca = totalDiferenca.add(r.getDiferencaRentabilidadeFundoSELIC());
 			totalFundos = totalFundos.add(r.getTotalValorFundo());
