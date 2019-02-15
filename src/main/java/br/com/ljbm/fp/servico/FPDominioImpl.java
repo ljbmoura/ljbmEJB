@@ -356,11 +356,16 @@ public class FPDominioImpl implements FPDominio {
 	@Override
 	public void addCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo,
 			BigDecimal fatorRemuneracaoAcumuladaSELIC) {
+		if (! emSeries.getTransaction().isActive()) {
+			emSeries.getTransaction().begin();
+		}
 		SerieCoeficienteSELIC x = new SerieCoeficienteSELIC();
 		x.setDataFim(dataAlvo);
 		x.setDataInicio(dataCompra);
 		x.setFator(fatorRemuneracaoAcumuladaSELIC);
 		emSeries.persist(x);
+		emSeries.getTransaction().commit();
+//		emSeries.flush();
 		
 	}
 

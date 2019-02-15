@@ -83,7 +83,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 
 	private ComparacaoInvestimentoVersusSELIC comparativoExtratoInvestimento_X_SELIC(
-			String dataPosicao, PosicaoTituloPorAgente posicao) {
+			String dataPosicao, PosicaoTituloPorAgente posicao)  {
 
 		LocalDate dataAlvo = LocalDate.from(FormatadorBR.paraLocalDate(dataPosicao));
 
@@ -92,12 +92,22 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		BigDecimal totalEquivalenteSELIC = BigDecimal.ZERO;
 		BigDecimal totalDiferencaSELIC = BigDecimal.ZERO;
 		
+		int cont = 0;
 		for (Aplicacao compra : posicao.getCompras()) {
 			
 			BigDecimal fatorRemuneracaoAcumuladaSELIC = model.getCoeficienteSELIC(compra.getDataCompra(), dataAlvo);
 			if (fatorRemuneracaoAcumuladaSELIC == null) {				
+				cont++;
 				fatorRemuneracaoAcumuladaSELIC = selicWS.fatorAcumuladoSelic(compra.getDataCompra(), dataAlvo);
 				model.addCoeficienteSELIC(compra.getDataCompra(), dataAlvo, fatorRemuneracaoAcumuladaSELIC);
+				if((cont % 10) == 0) {
+					try {
+						Thread.sleep(6000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			
 			BigDecimal vEquivalenteSELIC = compra.getValorAplicado().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
