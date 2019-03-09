@@ -28,41 +28,6 @@
 	</build>
 
 	<dependencies>
-	
-<!-- 		<dependency> -->
-<!-- 			<artifactId>jackson-core</artifactId> -->
-<!-- 		 	<groupId>com.fasterxml.jackson.core</groupId>  -->
-<!-- 			<version>2.4.5</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<artifactId>jackson-annotations</artifactId> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<version>2.4.5</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<artifactId>jackson-dataformat-yaml</artifactId> -->
-<!-- 			<groupId>com.fasterxml.jackson.dataformat</groupId> -->
-<!-- 			<version>2.4.5</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<artifactId>jackson-databind</artifactId> -->
-<!-- 			<groupId>com.fasterxml.jackson.core</groupId> -->
-<!-- 			<version>2.4.5</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
-		
-<!-- 		<dependency> -->
-<!-- 			<artifactId>jackson-datatype-joda</artifactId> -->
-<!-- 			<groupId>com.fasterxml.jackson.datatype</groupId> -->
-<!-- 			<version>2.4.5</version> -->
-<!-- 		</dependency> -->
-<!-- 			<scope>provided</scope> -->
 		
 		<dependency>
 			<groupId>br.com.ljbm</groupId>
@@ -146,12 +111,6 @@
 		<!-- <version>1.4.7</version> -->
 		<!-- </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-databind</artifactId> -->
-		<!-- <version>2.9.4</version> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -162,11 +121,6 @@
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>2.25.1</version>
 		</dependency>		
-		<dependency>
-		    <groupId>com.fasterxml.jackson.datatype</groupId>
-		    <artifactId>jackson-datatype-jsr310</artifactId>
-					<version>2.9.5</version>
-		</dependency>	
 <!-- 		<dependency> -->
 <!-- 			<groupId>com.sun.jersey</groupId> -->
 <!-- 			<artifactId>jersey-client</artifactId> -->

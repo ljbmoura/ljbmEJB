@@ -36,7 +36,7 @@ public class AvaliaInvestimentosTesouroDireto {
 
 	private static FPDominio servicoFPDominio;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		log = LogManager.getFormatterLogger(AvaliaInvestimentosTesouroDireto.class);
 //		resourcesDir = Recurso.getPastaRecursos(AvaliaInvestimentosTesouroDireto.class);
 		
@@ -205,7 +205,10 @@ public class AvaliaInvestimentosTesouroDireto {
 //		BB         BB Ações Vale              42,65  108,12      -33.578,93       73.154,75      106.733,68
 //		                                                        -208.424,76      535.817,17      744.241,93
 //		                                                        -168.470,69    1.085.477,23    1.253.947,92
-						,"14/02/2019"); // supondo resgate com valor cota dia atual para TD e valor cota do dia anterior para ações
+//						,"14/02/2019"); 
+//						,"15/02/2019"); 
+//						,"21/02/2019"); 
+						,"25/02/2019"); 
 		
 		
 		avaliador.imprimeComparacaoInvestComSELIC(comparativo);

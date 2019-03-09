@@ -171,7 +171,12 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		BigDecimal subtotalEqSelic = BigDecimal.ZERO;
 		BigDecimal subtotalDiferenca = BigDecimal.ZERO;
 		TipoFundoInvestimento tfi = comparativo.get(0).getTipoFundoInvestimento();
+		BigDecimal zero6Casas = new BigDecimal("0.000000");
 		for (ComparacaoInvestimentoVersusSELIC r : comparativo) {
+			if (zero6Casas.equals(r.getTotalValorFundo())) {
+				continue;
+			}
+					
 			// subtotal por TipoFundoInvestimento
 			if (!r.getTipoFundoInvestimento().equals(tfi)) {
 				System.out.println(String.format( 
