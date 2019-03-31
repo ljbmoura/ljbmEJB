@@ -14,7 +14,9 @@ import org.apache.logging.log4j.Logger;
 public class CotacaoTituloDAO {
 	@Inject	
 	private Logger log;
+	
 	// TODO criar tabela bd para cotações com cache
+	@SuppressWarnings("serial")
 	static Map<LocalDate, Map<String, String>> cotacoes = 
 			new HashMap<LocalDate, Map<String, String>>() 
 	{
