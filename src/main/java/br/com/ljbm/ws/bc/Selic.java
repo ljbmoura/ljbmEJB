@@ -123,10 +123,16 @@ private static final String HTTP_WWW3_BCB_GOV_BR_host = "https://www3.bcb.gov.br
 		
 		if (matcher.find()) {
 			fator = new BigDecimal(matcher.group(1));
+			return fator;
 		}
 		else {
-			throw new RuntimeException("Failed: Fator has not been found in the HTTP Response.");
+			pattern = Pattern.compile("\"fatorFormatado\":\"([\\d|\\,]+)\"}");
+			matcher = pattern.matcher(output); 
+			if (matcher.find()) {
+				fator = new BigDecimal(matcher.group(1).replaceAll(",",	"."));
+				return fator;
+			}
 		}
-		return fator;
+		throw new RuntimeException("Failed: Fator has not been found in the HTTP Response.");
 	}
 }

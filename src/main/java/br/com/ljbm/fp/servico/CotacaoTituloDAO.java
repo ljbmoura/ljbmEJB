@@ -1,4 +1,5 @@
-﻿package br.com.ljbm.fp.servico;
+package br.com.ljbm.fp.servico;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,8 +9,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.logging.log4j.Logger;
-
-
 
 public class CotacaoTituloDAO {
 	@Inject	
@@ -418,6 +417,94 @@ public class CotacaoTituloDAO {
 					put("BB Ações BDR Nivel I", 	"1,254257975");
 					put("BB Ações Petrobras",		"8,449819000");
 					put("BB Ações Siderurgia", 		"0,840722645");
+				}
+			});			
+			put(LocalDate.of(2019, 04, 05),new HashMap<String, String>() {
+				{	
+					put("Tesouro IPCA+ 2024", 		"2.565,90"); // valores para resgate
+					put("Tesouro IPCA+ 2035", 		"1.556,17");
+					put("Tesouro Prefixado 2023", 	"743,47");
+					put("Tesouro Prefixado 2025", 	"615,86");
+					put("BB Ações Energia",			"12,977094000");												
+					put("BB Ações Dividendos", 		"16,782672751");
+					put("BB Ações Exportação",		"8,665234698");
+					put("BB Ações Muilt Setor",		"1,868433172");
+					put("BB Ações Vale",			"15,831002757");
+					put("BB Acoes Aloc ETF FI", 	"5,269703554");
+					put("BB Ações Consumo", 		"2,388622569");
+					put("BB Ações Setor Financ",	"3,253090439");
+					put("BB Ações BB", 				"2,899966867");
+					put("BB Ações Const Civil", 	"1,192671326");
+					put("BB Ações Infra", 			"0,844827435");
+					put("BB Ações BDR Nivel I", 	"1,277010187");
+					put("BB Ações Petrobras",		"8,680904000");
+					put("BB Ações Siderurgia", 		"0,852723845");
+				}
+			});			
+			put(LocalDate.of(2019, 06, 11),new HashMap<String, String>() {
+				{	
+					put("Tesouro IPCA+ 2024", 		"2.705,98"); // valores para resgate
+					put("Tesouro IPCA+ 2035", 		"1.729,78");
+					put("Tesouro Prefixado 2023", 	"783,01");
+					put("Tesouro Prefixado 2025", 	"663,32");
+					put("BB Ações Energia",			"14,004583000");												
+					put("BB Ações Dividendos", 		"17,480123239");
+					put("BB Ações Exportação",		"8,422964567");
+					put("BB Ações Muilt Setor",		"1,943057559");
+					put("BB Ações Vale",			"15,603341543");
+					put("BB Acoes Aloc ETF FI", 	"5,341464147");
+					put("BB Ações Consumo", 		"2,587332563");
+					put("BB Ações Setor Financ",	"3,393157841");
+					put("BB Ações BB", 				"3,135341617");
+					put("BB Ações Const Civil", 	"1,340972773");
+					put("BB Ações Infra", 			"0,847645342");
+					put("BB Ações BDR Nivel I", 	"1,248083602");
+					put("BB Ações Petrobras",		"8,141933000");
+					put("BB Ações Siderurgia", 		"0,821894921");
+				}
+			});			
+			put(LocalDate.of(2019, 06, 21),new HashMap<String, String>() {
+				{	
+					put("Tesouro IPCA+ 2024", 		"2.740,11"); // valores para resgate
+					put("Tesouro IPCA+ 2035", 		"1.755,86");
+					put("Tesouro Prefixado 2023", 	"793,08");
+					put("Tesouro Prefixado 2025", 	"675,70");
+					put("BB Ações Energia",			"14,012690000");												
+					put("BB Ações Dividendos", 		"17,797312645");
+					put("BB Ações Exportação",		"8,742464273");
+					put("BB Ações Muilt Setor",		"1,982262462");
+					put("BB Ações Vale",			"15,900165827");
+					put("BB Acoes Aloc ETF FI", 	"5,491243024");
+					put("BB Ações Consumo", 		"2,669192626");
+					put("BB Ações Setor Financ",	"3,488899453");
+					put("BB Ações BB", 				"3,145308951");
+					put("BB Ações Const Civil", 	"1,441218213");
+					put("BB Ações Infra", 			"0,881174690");
+					put("BB Ações BDR Nivel I", 	"1,259639677");
+					put("BB Ações Petrobras",		"8,586210000");
+					put("BB Ações Siderurgia", 		"0,825052592");
+				}
+			});			
+			put(LocalDate.of(2019, 07, 06),new HashMap<String, String>() {
+				{	
+					put("Tesouro IPCA+ 2024", 		"2.760,28"); // valores para resgate
+					put("Tesouro IPCA+ 2035", 		"1.814,99");
+					put("Tesouro Prefixado 2023", 	"800,69");
+					put("Tesouro Prefixado 2025", 	"686,83");
+					put("BB Ações Energia",			"14,378986000");												
+					put("BB Ações Dividendos", 		"18,086986272");
+					put("BB Ações Exportação",		"8,940447462");
+					put("BB Ações Muilt Setor",		"2,023653185");
+					put("BB Ações Vale",			"15,655421578");
+					put("BB Acoes Aloc ETF FI", 	"5,594807676");
+					put("BB Ações Consumo", 		"2,768045625");
+					put("BB Ações Setor Financ",	"3,595813557");
+					put("BB Ações BB", 				"3,277920427");
+					put("BB Ações Const Civil", 	"1,495952860");
+					put("BB Ações Infra", 			"0,908681925");
+					put("BB Ações BDR Nivel I", 	"1,275202307");
+					put("BB Ações Petrobras",		"8,192987000");
+					put("BB Ações Siderurgia", 		"0,847105789");
 				}
 			});			
 		}
