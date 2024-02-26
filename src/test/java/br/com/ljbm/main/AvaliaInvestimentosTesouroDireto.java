@@ -1,5 +1,6 @@
 package br.com.ljbm.main;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.fp.servico.AvaliadorInvestimentoImpl;
 import br.com.ljbm.fp.servico.CotacaoTituloDAO;
-import br.com.ljbm.fp.servico.FPDominio;
 import br.com.ljbm.fp.servico.FPDominioImpl;
 import br.com.ljbm.ws.bc.Selic;
 
@@ -34,7 +34,7 @@ public class AvaliaInvestimentosTesouroDireto {
 	
 	private static Selic selicService;
 
-	private static FPDominio servicoFPDominio;
+	private static FPDominioImpl servicoFPDominio;
 
 	public static void main(String[] args) throws Exception {
 		log = LogManager.getFormatterLogger(AvaliaInvestimentosTesouroDireto.class);
@@ -54,11 +54,40 @@ public class AvaliaInvestimentosTesouroDireto {
 		AvaliadorInvestimentoImpl 
 		avaliador = new AvaliadorInvestimentoImpl(
 			selicService
-			, new CotacaoTituloDAO(log)
+			, new CotacaoTituloDAO(log, servicoFPDominio)
 			, log
 			, servicoFPDominio);
 		
-		String dataRef = "06/07/2019";
+		String dataRef = "23/02/2024";
+		
+//		put("Tesouro Prefixado 2025", 	"917,87");
+//		put("Tesouro Prefixado 2026", 	"837,04");
+//		put("Tesouro Prefixado 2029", 	"616,34");
+//		put("Tesouro IPCA+ 2024", 		"4.065,94"); // valores para resgate
+//		put("Tesouro IPCA+ 2029", 		"3.165,18");
+//		put("Tesouro IPCA+ 2035", 		"2.266,04");
+//		put("Tesouro RENDA+ AE 2035", 	"1.380,89");
+//		put("Tesouro RENDA+ AE 2040", 	"1.040,17");
+//
+//		put("BB Ações Energia",			"16,798465000");
+//		put("BB Ações Dividendos", 		"19,468146369");
+//		put("BB Ações Exportação",		"12,707916996");
+//		put("BB Ações Muilt Setor",		"2,745426937"); // Ações Seleção Fator
+//		put("BB Acoes Aloc ETF FI", 	"6,174183359"); // Ações Alocação ETF
+//		put("BB Ações Consumo", 		"1,738958557");
+//		put("BB Ações Setor Financ",	"3,599815322");
+//		put("BB Ações Siderurgia", 		"1,335112831");
+//		put("BB Ações BB", 				"4,575848993");
+//		put("BB Ações Const Civil", 	"1,225911474");
+//		put("BB Ações Infra", 			"1,429992821");
+//		put("BB Ações BDR Nivel I", 	"2,605431935"); // Ações Globais BDR I
+//
+//		put("BB Ações Vale",			"26,622579917");
+//		put("BB Ações Petrobras",		"26,500672000");
+//
+//		gravar cotações
+		
+		
 	
 		List<PosicaoTituloPorAgente> extrato = new ArrayList<PosicaoTituloPorAgente>();
 		LocalDate dataRefAux = LocalDate.parse(dataRef, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -67,9 +96,12 @@ public class AvaliaInvestimentosTesouroDireto {
 			PosicaoTituloPorAgente posicao = new PosicaoTituloPorAgente();
 			posicao.setAgenteCustodia(fundo.getCorretora().getSigla());
 			posicao.setTipoFundoInvestimento(fundo.getTipoFundoInvestimento());
-			posicao.setTitulo(fundo.getNome());
-			posicao.setCompras(fundo.getAplicacoes().stream().filter(a -> ! a.getDataCompra().isAfter(dataRefAux)).collect(Collectors.toList()));
-			extrato.add(posicao);
+			posicao.setTitulo(fundo.getNomeAbreviado());
+			posicao.setCompras(fundo.getAplicacoes().stream().filter(a -> ! a.getDataCompra().isAfter(dataRefAux) && a.getSaldoCotas().compareTo(BigDecimal.ZERO) > 0)
+				.collect(Collectors.toList()));
+			if (posicao.getCompras().size() > 0) {
+				extrato.add(posicao);
+			}
 		});
 		
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = avaliador.comparaInvestimentosComSELIC(extrato, dataRef);
@@ -358,3 +390,110 @@ public class AvaliaInvestimentosTesouroDireto {
 //BB         BB Ações Vale              25,56   88,04      -41.408,09       83.229,55      124.637,64
 //                                                        -192.434,15      684.587,48      877.021,63
 //                                                         -87.898,35    1.459.548,47    1.547.446,82
+
+// 05/12/2019
+//Corretora  Título/Fundo             %Rentab %RSelic       Diferença     Valor Fundo  Valor Eq Selic
+//Agora      Tesouro IPCA+ 2024         35,30   15,48       49.659,86      339.015,00      289.355,14
+//Agora      Tesouro IPCA+ 2035        109,58   79,06       15.794,78      108.470,40       92.675,61
+//Agora      Tesouro Prefixado 2023     41,73   17,01        6.468,17       37.076,29       30.608,12
+//Agora      Tesouro Prefixado 2025     39,47    7,21        1.530,67        6.618,14        5.087,47
+//BB         Tesouro IPCA+ 2024        202,73  124,30       19.148,78       73.914,00       54.765,22
+//BB         Tesouro IPCA+ 2035        106,25   51,82       35.982,74      136.368,29      100.385,55
+//BB         Tesouro Prefixado 2025     19,04    4,68       15.795,08      130.946,22      115.151,14
+//                                                         144.380,08      832.408,33      688.028,25
+//BB         BB Acoes Aloc ETF FI       60,73   83,38      -18.067,94      128.196,85      146.264,79
+//BB         BB Ações BB                24,75   23,88          651,41       92.633,46       91.982,05
+//BB         BB Ações BDR Nivel I       31,53    5,46        4.561,60       23.018,58       18.456,99
+//BB         BB Ações Const Civil       22,35  156,79      -12.375,86       11.264,30       23.640,17
+//BB         BB Ações Consumo          132,74  111,53        2.014,80       22.110,64       20.095,84
+//BB         BB Ações Dividendos        40,03   50,80       -5.148,23       66.941,50       72.089,73
+//BB         BB Ações Energia           84,49   57,27       22.155,97      150.177,85      128.021,88
+//BB         BB Ações Exportação        96,12  223,64      -15.286,14       23.509,83       38.795,96
+//BB         BB Ações Infra             17,40    4,83        2.513,46       23.480,48       20.967,02
+//BB         BB Ações Muilt Setor       18,66    4,83        2.766,64       23.733,66       20.967,02
+//BB         BB Ações Petrobras         16,99  229,39      -60.094,76       33.099,28       93.194,04
+//BB         BB Ações Setor Financ      13,01    4,66        2.089,00       28.254,68       26.165,68
+//BB         BB Ações Siderurgia       -38,23  194,52      -56.504,25       14.993,46       71.497,70
+//BB         BB Ações Vale              20,77   92,97      -47.857,28       80.052,89      127.910,17
+//                                                        -178.581,58      721.467,45      900.049,03
+//                                                         -34.201,50    1.553.875,78    1.588.077,28
+
+// 27/12/2019
+//Corretora  Título/Fundo             %Rentab %RSelic       Diferença     Valor Fundo  Valor Eq Selic
+//Agora      Tesouro IPCA+ 2024         35,86   15,78       50.289,97      340.415,33      290.125,36
+//Agora      Tesouro IPCA+ 2035        108,72   79,53       15.105,60      108.027,88       92.922,28
+//Agora      Tesouro Prefixado 2023     41,98   17,32        6.450,80       37.140,38       30.689,58
+//Agora      Tesouro Prefixado 2025     39,27    7,49        1.508,02        6.609,03        5.101,01
+//BB         Tesouro IPCA+ 2024        203,98  124,90       19.308,33       74.219,31       54.910,98
+//BB         Tesouro IPCA+ 2035        105,40   52,23       35.159,23      135.811,96      100.652,73
+//BB         Tesouro Prefixado 2025     18,88    4,96       15.308,34      130.765,97      115.457,63
+//                                                         143.130,28      832.989,85      689.859,57
+//BB         BB Acoes Aloc ETF FI       71,28   83,87      -10.042,67      136.611,42      146.654,09
+//BB         BB Ações BB                35,99   24,21        8.747,54      100.974,42       92.226,87
+//BB         BB Ações BDR Nivel I       32,80    5,74        4.734,30       23.240,41       18.506,11
+//BB         BB Ações Const Civil       37,56  157,47      -11.039,30       12.663,79       23.703,08
+//BB         BB Ações Consumo          151,57  112,09        3.750,74       23.900,07       20.149,33
+//BB         BB Ações Dividendos        49,84   51,20         -649,19       71.632,42       72.281,61
+//BB         BB Ações Energia          100,12   57,69       34.535,10      162.897,72      128.362,61
+//BB         BB Ações Exportação       112,42  224,51      -13.435,93       25.463,29       38.899,22
+//BB         BB Ações Infra             30,73    5,11        5.124,76       26.147,58       21.022,82
+//BB         BB Ações Muilt Setor       27,91    5,11        4.561,14       25.583,96       21.022,82
+//BB         BB Ações Petrobras         18,71  230,27      -59.855,06       33.587,02       93.442,08
+//BB         BB Ações Setor Financ      15,98    4,94        2.761,83       28.997,15       26.235,32
+//BB         BB Ações Siderurgia       -31,31  195,31      -55.014,84       16.673,15       71.687,99
+//BB         BB Ações Vale              30,22   93,49      -41.931,28       86.319,33      128.250,61
+//                                                        -127.752,85      774.691,71      902.444,56
+//                                                          15.377,43    1.607.681,56    1.592.304,13
+
+// 14/01/2020 
+//Corretora  Título/Fundo             %Rentab %RSelic       Diferença     Valor Fundo  Valor Eq Selic
+//Agora      Tesouro IPCA+ 2024         36,81   16,00       52.139,48      342.810,57      290.671,09
+//Agora      Tesouro IPCA+ 2035        111,00   79,87       16.109,70      109.206,80       93.097,10
+//Agora      Tesouro Prefixado 2023     43,29   17,54        6.737,38       37.484,69       30.747,31
+//Agora      Tesouro Prefixado 2025     40,77    7,70        1.569,48        6.680,09        5.110,61
+//BB         Tesouro IPCA+ 2024        206,12  125,32       19.727,25       74.741,53       55.014,28
+//BB         Tesouro IPCA+ 2035        107,65   52,51       36.451,99      137.294,09      100.842,10
+//BB         Tesouro Prefixado 2025     20,16    5,16       16.497,06      132.171,92      115.674,85
+//                                                         149.232,34      840.389,69      691.157,36
+//BB         BB Acoes Aloc ETF FI       74,12   84,22       -8.055,75      138.874,25      146.930,00
+//BB         BB Ações BB                28,72   24,44        3.181,12       95.581,51       92.400,38
+//BB         BB Ações BDR Nivel I       35,05    5,94        5.093,35       23.634,28       18.540,94
+//BB         BB Ações Const Civil       47,84  157,95      -10.137,48       13.610,19       23.747,68
+//BB         BB Ações Consumo          163,52  112,49        4.847,61       25.034,85       20.187,23
+//BB         BB Ações Dividendos        51,82   51,49          159,41       72.577,01       72.417,60
+//BB         BB Ações Energia          106,92   57,99       39.831,38      168.435,49      128.604,11
+//BB         BB Ações Exportação       126,79  225,12      -11.786,71       27.185,69       38.972,40
+//BB         BB Ações Infra             36,03    5,31        6.145,17       27.207,53       21.062,36
+//BB         BB Ações Muilt Setor       33,07    5,31        5.552,43       26.614,79       21.062,36
+//BB         BB Ações Petrobras         17,16  230,89      -60.468,47       33.149,41       93.617,88
+//BB         BB Ações Setor Financ      13,50    5,13        2.092,36       28.377,02       26.284,67
+//BB         BB Ações Siderurgia       -27,12  195,86      -54.132,36       17.690,51       71.822,86
+//BB         BB Ações Vale              34,93   93,85      -39.056,96       89.434,93      128.491,89
+//                                                        -116.734,89      787.407,47      904.142,36
+//                                                          32.497,45    1.627.797,16    1.595.299,71
+// 06/02/2020
+//Corretora  Título/Fundo             %Rentab %RSelic       Diferença     Valor Fundo  Valor Eq Selic
+//Agora      Tesouro IPCA+ 2024         38,03   16,34       54.348,54      345.865,20      291.516,66
+//Agora      Tesouro IPCA+ 2035        116,40   80,40       18.635,84      112.003,78       93.367,95
+//Agora      Tesouro Prefixado 2023     44,31   17,88        6.913,13       37.749,89       30.836,76
+//Agora      Tesouro Prefixado 2025     43,00    8,01        1.660,38        6.785,86        5.125,48
+//BB         Tesouro IPCA+ 2024        208,84  125,97       20.233,19       75.407,52       55.174,33
+//BB         Tesouro IPCA+ 2035        112,96   52,96       39.674,98      140.810,44      101.135,46
+//BB         Tesouro Prefixado 2025     22,06    5,46       18.253,26      134.264,62      116.011,36
+//                                                         159.719,32      852.887,31      693.167,99
+//BB         BB Acoes Aloc ETF FI       70,29   84,75      -11.539,49      135.817,95      147.357,44
+//BB         BB Ações BB                27,07   24,80        1.681,22       94.350,42       92.669,20
+//BB         BB Ações BDR Nivel I       40,37    6,25        5.971,29       24.566,16       18.594,87
+//BB         BB Ações Const Civil       43,18  158,70      -10.635,15       13.181,61       23.816,76
+//BB         BB Ações Consumo          157,60  113,11        4.226,59       24.472,56       20.245,97
+//BB         BB Ações Dividendos        50,15   51,93         -849,36       71.778,90       72.628,27
+//BB         BB Ações Energia          108,46   58,44       40.715,75      169.693,99      128.978,24
+//BB         BB Ações Exportação       116,91  226,06      -13.084,00       26.001,78       39.085,78
+//BB         BB Ações Infra             34,51    5,61        5.778,85       26.902,49       21.123,64
+//BB         BB Ações Muilt Setor       34,25    5,61        5.728,22       26.851,85       21.123,64
+//BB         BB Ações Petrobras         14,73  231,85      -61.430,28       32.459,94       93.890,22
+//BB         BB Ações Setor Financ      11,55    5,44        1.528,26       27.889,39       26.361,14
+//BB         BB Ações Siderurgia       -28,17  196,72      -54.596,82       17.434,98       72.031,79
+//BB         BB Ações Vale              29,13   94,41      -43.272,73       85.592,97      128.865,70
+//                                                        -129.777,65      776.994,98      906.772,63
+//                                                          29.941,67    1.629.882,29    1.599.940,62

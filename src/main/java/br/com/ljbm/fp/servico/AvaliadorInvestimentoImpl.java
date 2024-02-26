@@ -34,26 +34,26 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	private static final MathContext MC_BR = new MathContext(17, RoundingMode.DOWN);
 	
-	@Inject	
-	private Logger log;
+//	@Inject	
+//	private Logger log;
 	
-	private CotacaoTituloDAO daoCotacoes;
+//	private CotacaoTituloDAO daoCotacoes;
 	
 	@Inject
 	private Selic selicWS;
 	
 	@EJB
-	FPDominio model;
+	FPDominioImpl model;
 
 	public AvaliadorInvestimentoImpl() {
 	}
 	
 	public AvaliadorInvestimentoImpl(
 			Selic selicWS, CotacaoTituloDAO daoCotacoes,
-			Logger log, FPDominio model) {
+			Logger log, FPDominioImpl model) {
 		this.selicWS = selicWS;
-		this.daoCotacoes = daoCotacoes;
-		this.log = log;
+//		this.daoCotacoes = daoCotacoes;
+//		this.log = log;
 		this.model = model;
 	}
 
@@ -94,7 +94,6 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 		
 		int cont = 0;
 		for (Aplicacao compra : posicao.getCompras()) {
-			
 			BigDecimal fatorRemuneracaoAcumuladaSELIC = model.getCoeficienteSELIC(compra.getDataCompra(), dataAlvo);
 			if (fatorRemuneracaoAcumuladaSELIC == null) {				
 				cont++;
@@ -104,7 +103,6 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 					try {
 						Thread.sleep(6000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -112,12 +110,12 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			
 			BigDecimal vEquivalenteSELIC = compra.getValorAplicado().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(
-					daoCotacoes.paraTituloEm(posicao.getTitulo(), dataAlvo), MC_BR);
+					model.getCotacaoPorTituloData(compra.getFundoInvestimento(), dataAlvo), MC_BR);
 
 			System.out.println( 
 				String.format(
-						"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, diferença %,10.2f, fator %12.9f" 
-						, compra.getFundoInvestimento().getNome() 
+						"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, diferença %,11.2f, fator %12.9f" 
+						, compra.getFundoInvestimento().getNomeAbreviado() 
 						, compra.getDataCompra().toString()
 						, vAtualBruto
 						, vEquivalenteSELIC

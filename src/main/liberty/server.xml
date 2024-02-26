@@ -42,7 +42,7 @@
  	<include location="${shared.config.dir}/jdbc/sqljdbc4-4.2.xml" optional="false"/> 
  	
 	<dataSource id="ljbm_sql" jdbcDriverRef="sqljdbc4-4.2" jndiName="jdbc/ljbmDS" type="javax.sql.DataSource">
-	    <properties.microsoft.sqlserver databaseName="ljbm" password="root" portNumber="1433" serverName="PC" user="root"/>
+	    <properties.microsoft.sqlserver databaseName="ljbm" password="root" portNumber="1433" serverName="192.168.0.10" user="root"/>
 	</dataSource>
 <!--	
 	<include location="${shared.config.dir}/jdbc/mysql-connector-java-5.1.35.xml" optional="false"/>

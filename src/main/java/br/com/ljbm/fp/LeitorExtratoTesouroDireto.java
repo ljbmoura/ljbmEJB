@@ -3,6 +3,7 @@ package br.com.ljbm.fp;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -177,12 +178,18 @@ public class LeitorExtratoTesouroDireto {
 
 		@Override
 		void preencheExtrato(PosicaoTituloPorAgente extrato, Matcher matcher) {
-			Aplicacao apl = new Aplicacao();
 			try {
-				apl.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
-				apl.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2));
-				apl.setValorAplicado(FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2));
-				apl.setSaldoCotas(apl.getQuantidadeCotas());
+				BigDecimal qtdCotas = FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2);
+				Aplicacao apl = new Aplicacao (
+					LocalDate.parse(matcher.group(1), Data.formatter),
+					null,
+					FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2),
+					qtdCotas, 
+					qtdCotas);
+//				apl.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
+//				apl.setQuantidadeCotas(FormatadorBR.paraBigDecimal(matcher.group(2)).setScale(2));
+//				apl.setValorAplicado(FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2));
+//				apl.setSaldoCotas(apl.getQuantidadeCotas());
 				log.debug("Aplicação(Compra) construída: " + apl.toString());
 				extrato.getCompras().add(apl);
 			} catch (ParseException e) {

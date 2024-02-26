@@ -8,7 +8,6 @@ import java.time.LocalDate;
 //import org.hibernate.cache.ehcache.*;.*;
 import java.util.List;
 
-import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -29,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.Corretora;
+import br.com.ljbm.fp.modelo.CotacaoFundo;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.SerieCoeficienteSELIC;
 
@@ -40,10 +40,9 @@ import br.com.ljbm.fp.modelo.SerieCoeficienteSELIC;
  * 
  */
 @Stateless
-@Remote(FPDominio.class)
 // @Interceptors(value={LogDesempenho.class})
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class FPDominioImpl implements FPDominio {
+public class FPDominioImpl  {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -64,7 +63,7 @@ public class FPDominioImpl implements FPDominio {
 		this.log = log;
 	}
 
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Corretora addCorretora(Corretora corretora) throws FPException {
 		em.persist(corretora);
@@ -77,7 +76,6 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#addFundoInvestimento(br.com.ljbm
 	 * .fp.modelo.FundoInvestimento)
 	 */
-	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public FundoInvestimento addFundoInvestimento(FundoInvestimento fundoInvestimento) {
 		em.persist(fundoInvestimento);
@@ -90,7 +88,6 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#deleteFundoInvestimento(br.com.ljbm
 	 * .fp.modelo.FundoInvestimento)
 	 */
-	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void deleteFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		Long ide = fundoInvestimento.getIde();
@@ -108,7 +105,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#updateFundoInvestimento(br.com.ljbm
 	 * .fp.modelo.FundoInvestimento)
 	 */
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void updateFundoInvestimento(FundoInvestimento fundoInvestimento) throws FPException {
 		FundoInvestimento c = em.find(FundoInvestimento.class, fundoInvestimento.getIde());
@@ -124,7 +121,7 @@ public class FPDominioImpl implements FPDominio {
 	 * 
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimento(java.lang.Long)
 	 */
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimento(Long ide) throws FPException {
 
@@ -143,7 +140,7 @@ public class FPDominioImpl implements FPDominio {
 	 * br.com.ljbm.fp.modelo.FPDominio#getFundoInvestimentoByAgenteCustodiaETitulo(
 	 * java.lang.String, java.lang.String)
 	 */
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<FundoInvestimento> getFundoInvestimentoByAgenteCustodiaETitulo(String agenteCustodia,
 			String nomeTitulo) {
@@ -161,7 +158,7 @@ public class FPDominioImpl implements FPDominio {
 		// }
 	}
 
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public FundoInvestimento getFundoInvestimentoByCNPJ(String cnpj) throws FPException {
 
@@ -201,7 +198,7 @@ public class FPDominioImpl implements FPDominio {
 	 * 
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAllFundoInvestimento()
 	 */
-	@Override
+
 	// @SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<FundoInvestimento> getAllFundoInvestimento() {
@@ -221,7 +218,7 @@ public class FPDominioImpl implements FPDominio {
 		return em.createQuery(criteria).getResultList();
 	}
 
-	@Override
+
 	public List<FundoInvestimento> retrieveFundosInvestimentoOrderedByName() {
 		// JPA 2's criteria API is used to create a list of members sorted by
 		// name. You can try out the type safe criteria API as well by swapping
@@ -244,7 +241,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#addAplicacao(br.com.ljbm.fp.modelo
 	 * .Aplicacao)
 	 */
-	@Override
+
 	public Aplicacao addAplicacao(Aplicacao aplicacao) throws FPException {
 		em.persist(aplicacao);
 		return aplicacao;
@@ -256,7 +253,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#updateAplicacao(br.com.ljbm.fp.modelo
 	 * .Aplicacao)
 	 */
-	@Override
+
 	public void updateAplicacao(Aplicacao aplicacao) throws FPException {
 
 		Aplicacao s = em.find(Aplicacao.class, aplicacao.getDocumento());
@@ -273,7 +270,7 @@ public class FPDominioImpl implements FPDominio {
 	 * @see br.com.ljbm.fp.modelo.FPDominio#deleteAplicacao(br.com.ljbm.fp.modelo
 	 * .Aplicacao)
 	 */
-	@Override
+
 	public void deleteAplicacao(Aplicacao aplicacao) throws FPException {
 		Long documento = aplicacao.getDocumento();
 		aplicacao = em.find(Aplicacao.class, documento);
@@ -289,7 +286,7 @@ public class FPDominioImpl implements FPDominio {
 	 * 
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAplicacao(java.lang.Long)
 	 */
-	@Override
+
 	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Aplicacao getAplicacao(Long ide) throws FPException {
 		Aplicacao aplicacao = em.find(Aplicacao.class, ide);
@@ -305,7 +302,7 @@ public class FPDominioImpl implements FPDominio {
 	 * 
 	 * @see br.com.ljbm.fp.modelo.FPDominio#getAllAplicacao()
 	 */
-	@Override
+
 	public List<Aplicacao> getAllAplicacao() throws FPException {
 
 		Query query = em.createNamedQuery("Aplicacao.Todos");
@@ -318,7 +315,7 @@ public class FPDominioImpl implements FPDominio {
 		return lista;
 	}
 
-	@Override
+
 	public Corretora getCorretora(Long ide) throws FPException {
 		Corretora obj = em.find(Corretora.class, ide);
 		if (obj != null) {
@@ -330,7 +327,7 @@ public class FPDominioImpl implements FPDominio {
 		}
 	}
 
-	@Override
+
 	public Corretora getFundosCorretora(Long ide) {
 
 		TypedQuery<Corretora> query = em.createQuery(
@@ -339,7 +336,7 @@ public class FPDominioImpl implements FPDominio {
 		return query.getSingleResult();
 	}
 
-	@Override
+
 	public BigDecimal getCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo) {
 		TypedQuery<BigDecimal> query = emSeries.createQuery(
 				"select c.fator from SerieCoeficienteSELIC c where c.dataInicio=:dataCompra and c.dataFim=:dataAlvo"
@@ -353,7 +350,7 @@ public class FPDominioImpl implements FPDominio {
 		}
 	}
 
-	@Override
+
 	public void addCoeficienteSELIC(LocalDate dataCompra, LocalDate dataAlvo,
 			BigDecimal fatorRemuneracaoAcumuladaSELIC) {
 		if (! emSeries.getTransaction().isActive()) {
@@ -384,4 +381,18 @@ public class FPDominioImpl implements FPDominio {
 	// }
 	// }
 
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal getCotacaoPorTituloData(FundoInvestimento fi, LocalDate dataCotacao) {
+		TypedQuery<CotacaoFundo> query = em.createQuery(
+				"select c from CotacaoFundo c where c.fundoInvestimento=:fundo and c.dataCotacao=:dataCotacao",
+				CotacaoFundo.class);
+		query.setParameter("dataCotacao", dataCotacao);
+		query.setParameter("fundo", fi);
+		try {			
+			return query.getSingleResult().getValorCota();
+		} catch (NoResultException e) {
+			return BigDecimal.ZERO;
+		}
+		
+	}
 }

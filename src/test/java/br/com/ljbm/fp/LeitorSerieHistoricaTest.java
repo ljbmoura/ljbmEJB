@@ -12,8 +12,6 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.ljbm.fp.LeitorSerieHistorica;
-import br.com.ljbm.fp.SerieHistorica;
 import br.com.ljbm.utilitarios.Recurso;
 
 public class LeitorSerieHistoricaTest {

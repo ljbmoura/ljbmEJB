@@ -132,17 +132,25 @@ public class LeitorExtratoInvestimentosBB {
 		while ((linha = leitorArquivo.readLine()) != null) {
 			matcher = pattern1.matcher(linha);
 			if (matcher.find()) {
-				Aplicacao aplicacao = new Aplicacao();
+//				Aplicacao aplicacao = new Aplicacao();
 				// System.out.println(1 + ": " + matcher.group(1));
-				aplicacao
-						.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
+//				aplicacao
+//						.setDataCompra(LocalDate.parse(matcher.group(1), Data.formatter));
 				// System.out.println(2 + ": " + matcher.group(2));
-				aplicacao.setDocumento(Long.parseLong(matcher.group(2)));
+//				aplicacao.setDocumento(Long.parseLong(matcher.group(2)));
 				// System.out.println(3 + ": " + matcher.group(3));
 
-				aplicacao.setValorAplicado(FormatadorBR.paraBigDecimal(
-						matcher.group(3)).setScale(2));
+//				aplicacao.setValorAplicado(FormatadorBR.paraBigDecimal(
+//						matcher.group(3)).setScale(2));
 				// System.out.println(linha);
+				
+				Aplicacao aplicacao = new Aplicacao (
+					LocalDate.parse(matcher.group(1), Data.formatter),
+					Long.parseLong(matcher.group(2)),
+					FormatadorBR.paraBigDecimal(matcher.group(3)).setScale(2),
+					null, 
+					null);				
+				
 				aplicacoes.add(aplicacao);
 
 				// for (int i = 1; i <= matcher.groupCount(); i++) {

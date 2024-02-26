@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import br.com.ljbm.fp.servico.AvaliadorInvestimento;
 import br.com.ljbm.utilitarios.Recurso;
 
 public class AvaliadorInvestimentoTest {

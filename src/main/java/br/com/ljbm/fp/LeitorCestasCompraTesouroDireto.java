@@ -123,19 +123,24 @@ public class LeitorCestasCompraTesouroDireto {
 //					System.out.println(i + ": " + matcher.group(i));
 //				}
 
-				Aplicacao aplicacao = new Aplicacao();
+				BigDecimal qtdCotas = FormatadorBR.paraBigDecimal(matcher.group(5)).setScale(2);
+				Aplicacao aplicacao = new Aplicacao (
+					LocalDate.parse(matcher.group(3),Data.formatter),
+					Long.parseLong(matcher.group(1)),
+					qtdCotas.multiply( FormatadorBR.paraBigDecimal(matcher.group(6)).setScale(2)),
+					qtdCotas, 
+					qtdCotas);
 
-				aplicacao.setQuantidadeCotas(FormatadorBR.paraBigDecimal(
-						matcher.group(5)).setScale(2));
-
-				aplicacao.setValorAplicado(aplicacao.getQuantidadeCotas()
-						.multiply(
-								FormatadorBR.paraBigDecimal(matcher.group(6))
-										.setScale(2)));
-				aplicacao.setSaldoCotas(aplicacao.getQuantidadeCotas());
-				aplicacao
-						.setDataCompra(LocalDate.parse(matcher.group(3),Data.formatter));
-				aplicacao.setDocumento(Long.parseLong(matcher.group(1)));
+//				aplicacao.setQuantidadeCotas();
+//
+//				aplicacao.setValorAplicado(aplicacao.getQuantidadeCotas()
+//						.multiply(
+//								FormatadorBR.paraBigDecimal(matcher.group(6))
+//										.setScale(2)));
+//				aplicacao.setSaldoCotas(aplicacao.getQuantidadeCotas());
+//				aplicacao
+//						.setDataCompra(LocalDate.parse(matcher.group(3),Data.formatter));
+//				aplicacao.setDocumento(Long.parseLong(matcher.group(1)));
 				aplicacoes.add(aplicacao);
 //				System.out.println("Linha processada : " + linha);
 

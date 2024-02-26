@@ -14,8 +14,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.ljbm.fp.ExtratoInvestimento;
-import br.com.ljbm.fp.LeitorExtratoInvestimentosBB;
 import br.com.ljbm.fp.modelo.Aplicacao;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
