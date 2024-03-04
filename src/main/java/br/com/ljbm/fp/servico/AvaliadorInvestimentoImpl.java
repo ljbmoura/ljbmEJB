@@ -49,7 +49,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 	}
 	
 	public AvaliadorInvestimentoImpl(
-			Selic selicWS, CotacaoTituloDAO daoCotacoes,
+			Selic selicWS, //CotacaoTituloDAO daoCotacoes,
 			Logger log, FPDominioImpl model) {
 		this.selicWS = selicWS;
 //		this.daoCotacoes = daoCotacoes;

@@ -18,7 +18,7 @@ import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
 import br.com.ljbm.fp.servico.AvaliadorInvestimentoImpl;
-import br.com.ljbm.fp.servico.CotacaoTituloDAO;
+//import br.com.ljbm.fp.servico.CotacaoTituloDAO;
 import br.com.ljbm.fp.servico.FPDominioImpl;
 import br.com.ljbm.ws.bc.Selic;
 
@@ -54,11 +54,11 @@ public class AvaliaInvestimentosTesouroDireto {
 		AvaliadorInvestimentoImpl 
 		avaliador = new AvaliadorInvestimentoImpl(
 			selicService
-			, new CotacaoTituloDAO(log, servicoFPDominio)
+//			, new CotacaoTituloDAO(log, servicoFPDominio)
 			, log
 			, servicoFPDominio);
 		
-		String dataRef = "23/02/2024";
+		String dataRef = "01/03/2024";
 		
 //		put("Tesouro Prefixado 2025", 	"917,87");
 //		put("Tesouro Prefixado 2026", 	"837,04");

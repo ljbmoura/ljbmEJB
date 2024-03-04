@@ -6,15 +6,15 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.Logger;
 
 public class CotacaoTituloDAO {
-	@Inject	
-	private Logger log;
+//	@Inject	
+//	private Logger log;
 
-	private FPDominioImpl servicoFPDominio;
+//	private FPDominioImpl servicoFPDominio;
 	
 	// TODO criar tabela bd para cotações com cache
 	@SuppressWarnings("serial")
@@ -1121,10 +1121,10 @@ public class CotacaoTituloDAO {
 		}
 	};
 
-	public CotacaoTituloDAO(Logger log, FPDominioImpl servicoFPDominio) {
-		this.log = log;
-		this.servicoFPDominio = servicoFPDominio;
-	}
+//	public CotacaoTituloDAO(Logger log, FPDominioImpl servicoFPDominio) {
+//		this.log = log;
+//		this.servicoFPDominio = servicoFPDominio;
+//	}
 	
 	public BigDecimal paraTituloEm(String titulo, LocalDate dataCotacao) {
 		return BigDecimal.ZERO;

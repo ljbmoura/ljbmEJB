@@ -21,7 +21,7 @@
 			<!-- Propriedades JDBC -->
 			<property name="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:jtds:sqlserver://192.168.0.10:1433;databaseName=ljbm" />
+				value="jdbc:jtds:sqlserver://localhost:1433;databaseName=ljbm" />
 			<property name="javax.persistence.jdbc.user" value="ljbm_user" />
 			<property name="javax.persistence.jdbc.password" value="ljbm" />
 
@@ -55,7 +55,7 @@
 			<!-- Propriedades JDBC -->
 			<property name="javax.persistence.jdbc.driver" value="net.sourceforge.jtds.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:jtds:sqlserver://192.168.0.10:1433;databaseName=ljbm" />
+				value="jdbc:jtds:sqlserver://localhost:1433;databaseName=ljbm" />
 			<property name="javax.persistence.jdbc.user" value="ljbm_user" />
 			<property name="javax.persistence.jdbc.password" value="ljbm" />
 
