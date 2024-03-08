@@ -3,6 +3,7 @@ package br.com.ljbm.main;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +59,11 @@ public class AvaliaInvestimentosTesouroDireto {
 			, log
 			, servicoFPDominio);
 		
-		String dataRef = "01/03/2024";
+		String dataRef = 
+//				"07/03/2024"
+				LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+			;
+		
 		
 //		put("Tesouro Prefixado 2025", 	"917,87");
 //		put("Tesouro Prefixado 2026", 	"837,04");
