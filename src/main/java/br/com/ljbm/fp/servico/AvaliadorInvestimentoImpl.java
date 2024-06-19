@@ -34,8 +34,8 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 
 	private static final MathContext MC_BR = new MathContext(17, RoundingMode.DOWN);
 	
-//	@Inject	
-//	private Logger log;
+	@Inject	
+	private Logger log;
 	
 //	private CotacaoTituloDAO daoCotacoes;
 	
@@ -53,7 +53,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			Logger log, FPDominioImpl model) {
 		this.selicWS = selicWS;
 //		this.daoCotacoes = daoCotacoes;
-//		this.log = log;
+		this.log = log;
 		this.model = model;
 	}
 
@@ -112,7 +112,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(
 					model.getCotacaoPorTituloData(compra.getFundoInvestimento(), dataAlvo), MC_BR);
 
-			System.out.println( 
+			log.debug( 
 				String.format(
 						"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, diferença %,11.2f, fator %12.9f" 
 						, compra.getFundoInvestimento().getNomeAbreviado() 
@@ -151,7 +151,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 	}
 
 	public void imprimeComparacaoInvestComSELIC(List<ComparacaoInvestimentoVersusSELIC> comparativo) {
-		System.out.println( 
+		log.info( 
 				String.format("%-10s %-24s %7s %7s %15s %15s %15s"
 					,"Corretora"	
 					,"Título/Fundo"
@@ -177,7 +177,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 					
 			// subtotal por TipoFundoInvestimento
 			if (!r.getTipoFundoInvestimento().equals(tfi)) {
-				System.out.println(String.format( 
+				log.info(String.format( 
 						"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
 						, ""
 						, ""
@@ -192,7 +192,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 				subtotalDiferenca = BigDecimal.ZERO;
 			}
 			
-			System.out.println(
+			log.info(
 				String.format( 
 
 					"%10s %-24s %7.2f %7.2f %,15.2f %,15.2f %,15.2f"
@@ -220,7 +220,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 			totalEqSelic = totalEqSelic.add(r.getTotalValorEquivalenteSELIC());
 			
 		}
-		System.out.println(String.format( 
+		log.info(String.format( 
 				"%35s %7s %7s %,15.2f %,15.2f %,15.2f"
 				, ""
 				, ""
@@ -229,7 +229,7 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 				, subtotalFundos
 				, subtotalEqSelic
 		) );		
-		System.out.println(
+		log.info(
 				String.format( 
 
 					"%35s %7s %7s %,15.2f %,15.2f %,15.2f"

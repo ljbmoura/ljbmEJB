@@ -3,7 +3,6 @@ package br.com.ljbm.main;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
+import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
 import br.com.ljbm.fp.servico.AvaliadorInvestimentoImpl;
 //import br.com.ljbm.fp.servico.CotacaoTituloDAO;
 import br.com.ljbm.fp.servico.FPDominioImpl;
@@ -60,8 +60,8 @@ public class AvaliaInvestimentosTesouroDireto {
 			, servicoFPDominio);
 		
 		String dataRef = 
-//				"07/03/2024"
-				LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+				"17/06/2024"
+//				LocalDate.now().minusDays(0).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 			;
 		
 		
@@ -97,17 +97,19 @@ public class AvaliaInvestimentosTesouroDireto {
 		List<PosicaoTituloPorAgente> extrato = new ArrayList<PosicaoTituloPorAgente>();
 		LocalDate dataRefAux = LocalDate.parse(dataRef, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		List<FundoInvestimento> fundos = servicoFPDominio.getAllFundoInvestimento();
-		fundos.stream().forEach(fundo -> {
-			PosicaoTituloPorAgente posicao = new PosicaoTituloPorAgente();
-			posicao.setAgenteCustodia(fundo.getCorretora().getSigla());
-			posicao.setTipoFundoInvestimento(fundo.getTipoFundoInvestimento());
-			posicao.setTitulo(fundo.getNomeAbreviado());
-			posicao.setCompras(fundo.getAplicacoes().stream().filter(a -> ! a.getDataCompra().isAfter(dataRefAux) && a.getSaldoCotas().compareTo(BigDecimal.ZERO) > 0)
-				.collect(Collectors.toList()));
-			if (posicao.getCompras().size() > 0) {
-				extrato.add(posicao);
-			}
-		});
+		fundos.stream()
+//			.filter(f -> f.getTipoFundoInvestimento().equals(TipoFundoInvestimento.TesouroDireto))
+			.forEach(fundo -> {
+				PosicaoTituloPorAgente posicao = new PosicaoTituloPorAgente();
+				posicao.setAgenteCustodia(fundo.getCorretora().getSigla());
+				posicao.setTipoFundoInvestimento(fundo.getTipoFundoInvestimento());
+				posicao.setTitulo(fundo.getNomeAbreviado());
+				posicao.setCompras(fundo.getAplicacoes().stream().filter(a -> ! a.getDataCompra().isAfter(dataRefAux) && a.getSaldoCotas().compareTo(BigDecimal.ZERO) > 0)
+					.collect(Collectors.toList()));
+				if (posicao.getCompras().size() > 0) {
+					extrato.add(posicao);
+				}
+			});
 		
 		List<ComparacaoInvestimentoVersusSELIC> comparativo = avaliador.comparaInvestimentosComSELIC(extrato, dataRef);
 		

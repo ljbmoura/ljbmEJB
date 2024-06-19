@@ -13,7 +13,7 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="br.com.ljbm" level="debug" />
+		<Logger name="br.com.ljbm" level="info" />
 
 		<Logger name="org.hibernate" level="info" />
 		<Logger name="net.sf.ehcache" level="warn" />
@@ -23,7 +23,7 @@
 		<Logger name="org.hibernate.type" level="warn" />
 		<Logger name="org.hibernate.dialect" level="warn" />
 
-		<Root level="debug">
+		<Root level="info">
 			<AppenderRef ref="STDOUT" />
 		</Root>
 	</Loggers>
