@@ -108,15 +108,16 @@ public class AvaliadorInvestimentoImpl implements AvaliadorInvestimento {
 				}
 			}
 			
-			BigDecimal vEquivalenteSELIC = compra.getValorAplicado().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
+			BigDecimal vEquivalenteSELIC = compra.getValorAplicadoRemanescente().multiply(fatorRemuneracaoAcumuladaSELIC, MC_BR);
 			BigDecimal vAtualBruto = compra.getSaldoCotas().multiply(
 					model.getCotacaoPorTituloData(compra.getFundoInvestimento(), dataAlvo), MC_BR);
 
-			log.debug( 
+			log.info( 
 				String.format(
-						"Comparando %22s, compra %s: Atual %,10.2f Selic %,10.2f, diferença %,11.2f, fator %12.9f" 
+						"Comparando %22s, compra em %s %,10.2f Atual %,10.2f Selic %,10.2f, diferença %,11.2f, fator %12.9f" 
 						, compra.getFundoInvestimento().getNomeAbreviado() 
 						, compra.getDataCompra().toString()
+						, compra.getValorAplicado()
 						, vAtualBruto
 						, vEquivalenteSELIC
 						, vAtualBruto.subtract(vEquivalenteSELIC)

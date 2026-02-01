@@ -17,13 +17,13 @@ import org.apache.logging.log4j.Logger;
 import br.com.ljbm.fp.modelo.ComparacaoInvestimentoVersusSELIC;
 import br.com.ljbm.fp.modelo.FundoInvestimento;
 import br.com.ljbm.fp.modelo.PosicaoTituloPorAgente;
-import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
+//import br.com.ljbm.fp.modelo.TipoFundoInvestimento;
 import br.com.ljbm.fp.servico.AvaliadorInvestimentoImpl;
 //import br.com.ljbm.fp.servico.CotacaoTituloDAO;
 import br.com.ljbm.fp.servico.FPDominioImpl;
 import br.com.ljbm.ws.bc.Selic;
 
-public class AvaliaInvestimentosTesouroDireto {
+public class AvaliaInvestimentos {
 	
 	private static Logger log;
 
@@ -38,7 +38,7 @@ public class AvaliaInvestimentosTesouroDireto {
 	private static FPDominioImpl servicoFPDominio;
 
 	public static void main(String[] args) throws Exception {
-		log = LogManager.getFormatterLogger(AvaliaInvestimentosTesouroDireto.class);
+		log = LogManager.getFormatterLogger(AvaliaInvestimentos.class);
 		
 		selicService = new Selic(log);
 
@@ -48,6 +48,7 @@ public class AvaliaInvestimentosTesouroDireto {
 		emSeries = fabricaEMSeries.createEntityManager();
 		
 		servicoFPDominio = new FPDominioImpl(em, emSeries, log);
+		
 		
 		em.getTransaction().begin();
 		emSeries.getTransaction().begin();
@@ -60,13 +61,16 @@ public class AvaliaInvestimentosTesouroDireto {
 			, servicoFPDominio);
 		
 		String dataRef = 
-				"17/06/2024"
-//				LocalDate.now().minusDays(0).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+				LocalDate.parse("2026-01-27")
+//				LocalDate.now().minusDays(1)
+					.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 			;
 		
 		
 //		put("Tesouro Prefixado 2025", 	"917,87");
 //		put("Tesouro Prefixado 2026", 	"837,04");
+		
+		
 //		put("Tesouro Prefixado 2029", 	"616,34");
 //		put("Tesouro IPCA+ 2024", 		"4.065,94"); // valores para resgate
 //		put("Tesouro IPCA+ 2029", 		"3.165,18");
